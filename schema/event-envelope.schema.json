@@ -1,0 +1,120 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://suynda.com/schemas/event-envelope.schema.json",
+  "title": "Suynda Event Envelope",
+  "description": "Closed envelope for inter-module events. Unknown fields are rejected (anti-drift lock, §6.2). ref is reference-only — never business payload. change_mask holds field names / counters only, never values.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event",
+    "version",
+    "event_id",
+    "tenant_id",
+    "origen_module",
+    "ref",
+    "entity_version",
+    "change_mask",
+    "occurred_at"
+  ],
+  "properties": {
+    "event": {
+      "type": "string",
+      "description": "EventType from data/events.json",
+      "enum": [
+        "party.created",
+        "party.updated",
+        "party.role_added",
+        "party.role_deactivated",
+        "party.deleted",
+        "item.created",
+        "item.updated",
+        "item.deleted",
+        "branch.created",
+        "branch.updated",
+        "tax_rate.published",
+        "stock.adjusted",
+        "stock.transferred",
+        "sale.completed",
+        "sale.voided",
+        "document.approved",
+        "document.rejected",
+        "purchase.registered",
+        "purchase.approved",
+        "employee.status_changed",
+        "tenant.module_activated",
+        "tenant.module_deactivated",
+        "tenant.provisioned",
+        "credits.granted",
+        "credits.low_balance",
+        "credits.exhausted",
+        "credits.overdraft_started"
+      ]
+    },
+    "version": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Schema version of the message"
+    },
+    "event_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Idempotency key for subscribers"
+    },
+    "tenant_id": {
+      "type": "string",
+      "format": "uuid",
+      "description": "Tenant UUID"
+    },
+    "origen_module": {
+      "type": "string",
+      "description": "ModuleKey of the owner that emitted the event",
+      "enum": [
+        "foundation",
+        "padron",
+        "factura",
+        "deposito",
+        "nucleo",
+        "compra",
+        "talento",
+        "visibilidad",
+        "conecta",
+        "lab",
+        "vet",
+        "taller",
+        "milk",
+        "farm",
+        "comercio"
+      ]
+    },
+    "ref": {
+      "type": "object",
+      "description": "Reference only — never business payload",
+      "additionalProperties": false,
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "entity_version": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Monotonic per entity, set by the owner"
+    },
+    "change_mask": {
+      "type": "array",
+      "description": "Field names / counters only, never values",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "occurred_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO-8601 timestamp"
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "_status": "PROPUESTO",
+  "_notes": [
+    "Starter set — se espera crecimiento. message_es en es-PY llano, sin siglas."
+  ],
+  "errors": [
+    {
+      "code": "AUTH_OTP_INVALID",
+      "http": 401,
+      "message_es": "El código de verificación no es válido"
+    },
+    {
+      "code": "AUTH_OTP_EXPIRED",
+      "http": 401,
+      "message_es": "El código de verificación venció"
+    },
+    {
+      "code": "AUTH_CREDENTIAL_INVALID",
+      "http": 401,
+      "message_es": "Usuario o contraseña incorrectos"
+    },
+    {
+      "code": "AUTH_LOCKED",
+      "http": 403,
+      "message_es": "La cuenta está bloqueada por intentos fallidos"
+    },
+    {
+      "code": "PADRON_PARTY_NOT_FOUND",
+      "http": 404,
+      "message_es": "No se encontró la parte indicada"
+    },
+    {
+      "code": "PADRON_IDENTIFIER_CONFLICT",
+      "http": 409,
+      "message_es": "Ese identificador ya está en uso"
+    },
+    {
+      "code": "PADRON_ITEM_NOT_FOUND",
+      "http": 404,
+      "message_es": "No se encontró el ítem indicado"
+    },
+    {
+      "code": "ENTITLEMENT_MODULE_INACTIVE",
+      "http": 403,
+      "message_es": "El módulo no está activo para este tenant"
+    },
+    {
+      "code": "CAPABILITY_DENIED",
+      "http": 403,
+      "message_es": "No tenés permiso para esta operación"
+    },
+    {
+      "code": "TENANT_MISMATCH",
+      "http": 403,
+      "message_es": "El tenant de la solicitud no coincide con el de la sesión"
+    },
+    {
+      "code": "CREDITS_INSUFFICIENT",
+      "http": 402,
+      "message_es": "No hay créditos suficientes"
+    },
+    {
+      "code": "CREDITS_OVERDRAFT_EXPIRED",
+      "http": 402,
+      "message_es": "La ventana de sobregiro venció"
+    },
+    {
+      "code": "IDEMPOTENCY_REPLAY",
+      "http": 200,
+      "message_es": "La operación ya fue procesada; se devuelve el resultado anterior"
+    },
+    {
+      "code": "EVENT_ENVELOPE_INVALID",
+      "http": 400,
+      "message_es": "El sobre del evento no es válido"
+    }
+  ]
+}

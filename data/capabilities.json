@@ -1,0 +1,54 @@
+{
+  "_status": "PROPUESTO",
+  "_notes": [
+    "Asignaciones de política finales llegan con el security pass.",
+    "factura.emit: FAIL_CLOSED contra datos de padron y FAIL_AFTER_GRACE contra créditos — dos chequeos de una misma operación (§8.1 nota)."
+  ],
+  "capabilities": [
+    {
+      "key": "padron.party.read",
+      "availability": "FAIL_OPEN",
+      "initiator": "both"
+    },
+    {
+      "key": "padron.party.create",
+      "availability": "FAIL_AFTER_GRACE",
+      "initiator": "both"
+    },
+    {
+      "key": "padron.item.read",
+      "availability": "FAIL_OPEN",
+      "initiator": "both"
+    },
+    {
+      "key": "padron.item.create",
+      "availability": "FAIL_AFTER_GRACE",
+      "initiator": "both"
+    },
+    {
+      "key": "padron.fiscal_profile.read",
+      "availability": "FAIL_CLOSED",
+      "initiator": "both"
+    },
+    {
+      "key": "factura.emit",
+      "availability": "FAIL_CLOSED",
+      "initiator": "user"
+    },
+    {
+      "key": "credits.consume",
+      "availability": "FAIL_AFTER_GRACE",
+      "initiator": "both"
+    },
+    {
+      "key": "entitlements.check",
+      "availability": "FAIL_AFTER_GRACE",
+      "initiator": "both"
+    },
+    {
+      "key": "roles.change",
+      "availability": "FAIL_CLOSED",
+      "initiator": "user"
+    }
+  ]
+}

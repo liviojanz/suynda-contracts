@@ -1,0 +1,55 @@
+{
+  "_status": "PROPUESTO",
+  "_notes": [
+    "Solo claves y descripciones. Los costos en créditos viven en operation_costs de la Foundation (§7.6.4) — nunca acá.",
+    "Lista de claves aún abierta (v4.3 §14 #1); confirmar antes de fase 4.",
+    "deposito no tiene operación medida en v1 — regalo deliberado (§7.6.4)."
+  ],
+  "operations": [
+    {
+      "module": "factura",
+      "operation_key": "document.emit",
+      "descripcion": "factura / NC / ND emitida"
+    },
+    {
+      "module": "factura",
+      "operation_key": "document.cancel",
+      "descripcion": "cancelación / inutilización"
+    },
+    {
+      "module": "compra",
+      "operation_key": "document.process_ai",
+      "descripcion": "OCR + extracción de un documento"
+    },
+    {
+      "module": "compra",
+      "operation_key": "reconciliation.run",
+      "descripcion": "conciliación Hechauka"
+    },
+    {
+      "module": "lab",
+      "operation_key": "result.report_ai",
+      "descripcion": "resumen no-diagnóstico"
+    },
+    {
+      "module": "talento",
+      "operation_key": "payroll.employee_run",
+      "descripcion": "por empleado por corrida"
+    },
+    {
+      "module": "visibilidad",
+      "operation_key": "enrichment.run",
+      "descripcion": "enriquecimiento"
+    },
+    {
+      "module": "conecta",
+      "operation_key": "whatsapp.message_out",
+      "descripcion": "mensaje de WhatsApp saliente"
+    },
+    {
+      "module": "nucleo",
+      "operation_key": "closing.month_run",
+      "descripcion": "cierre mensual"
+    }
+  ]
+}

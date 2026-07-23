@@ -1,0 +1,122 @@
+[
+  {
+    "key": "foundation",
+    "clase": "plataforma",
+    "nivel": null,
+    "nombre_es": "Plataforma",
+    "descripcion_es": "Identidad, tenants, créditos y oficina de eventos",
+    "activo": true
+  },
+  {
+    "key": "padron",
+    "clase": "plataforma",
+    "nivel": null,
+    "nombre_es": "Datos maestros",
+    "descripcion_es": "Partes, catálogo, sucursales y tablas oficiales",
+    "activo": true
+  },
+  {
+    "key": "factura",
+    "clase": "comercial",
+    "nivel": 2,
+    "nombre_es": "Factura",
+    "descripcion_es": "Emisión y documentos fiscales",
+    "activo": true
+  },
+  {
+    "key": "deposito",
+    "clase": "comercial",
+    "nivel": 2,
+    "nombre_es": "Depósito",
+    "descripcion_es": "Stock e inventario",
+    "activo": true
+  },
+  {
+    "key": "nucleo",
+    "clase": "comercial",
+    "nivel": 2,
+    "nombre_es": "Núcleo",
+    "descripcion_es": "Contabilidad y cierre",
+    "activo": true
+  },
+  {
+    "key": "compra",
+    "clase": "comercial",
+    "nivel": 2,
+    "nombre_es": "Compra",
+    "descripcion_es": "Compras y conciliación",
+    "activo": true
+  },
+  {
+    "key": "talento",
+    "clase": "comercial",
+    "nivel": 2,
+    "nombre_es": "Talento",
+    "descripcion_es": "Personas y nómina",
+    "activo": true
+  },
+  {
+    "key": "visibilidad",
+    "clase": "comercial",
+    "nivel": 2,
+    "nombre_es": "Visibilidad",
+    "descripcion_es": "Enriquecimiento y presencia",
+    "activo": true
+  },
+  {
+    "key": "conecta",
+    "clase": "comercial",
+    "nivel": 2,
+    "nombre_es": "Conecta",
+    "descripcion_es": "Mensajería saliente",
+    "activo": true
+  },
+  {
+    "key": "lab",
+    "clase": "comercial",
+    "nivel": 1,
+    "nombre_es": "Lab",
+    "descripcion_es": "Laboratorio clínico",
+    "activo": true
+  },
+  {
+    "key": "vet",
+    "clase": "comercial",
+    "nivel": 1,
+    "nombre_es": "Vet",
+    "descripcion_es": "Veterinaria",
+    "activo": true
+  },
+  {
+    "key": "taller",
+    "clase": "comercial",
+    "nivel": 1,
+    "nombre_es": "Taller",
+    "descripcion_es": "Taller y servicio técnico",
+    "activo": true
+  },
+  {
+    "key": "milk",
+    "clase": "comercial",
+    "nivel": 1,
+    "nombre_es": "Milk",
+    "descripcion_es": "Cadena láctea",
+    "activo": true
+  },
+  {
+    "key": "farm",
+    "clase": "comercial",
+    "nivel": 1,
+    "nombre_es": "Farm",
+    "descripcion_es": "Campo y producción",
+    "activo": true
+  },
+  {
+    "key": "comercio",
+    "clase": "comercial",
+    "nivel": 1,
+    "nombre_es": "Comercio",
+    "descripcion_es": "Comercio general",
+    "activo": true
+  }
+]

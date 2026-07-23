@@ -1,0 +1,29 @@
+{
+  "ModuleKey": [
+    "foundation",
+    "padron",
+    "factura",
+    "deposito",
+    "nucleo",
+    "compra",
+    "talento",
+    "visibilidad",
+    "conecta",
+    "lab",
+    "vet",
+    "taller",
+    "milk",
+    "farm",
+    "comercio"
+  ],
+  "ModuleClass": ["plataforma", "comercial"],
+  "ModuleLevel": [1, 2, null],
+  "PartyRole": ["cliente", "proveedor", "cliente_contable", "emisor"],
+  "IdentityType": ["phone", "email", "username"],
+  "CredentialType": ["password", "pin", "passkey"],
+  "IdentifierType": ["RUC", "CI", "PASSPORT", "FOREIGN_TAX_ID"],
+  "PlanKey": {
+    "_status": "PROPUESTO",
+    "values": ["base", "plus", "max"]
+  }
+}

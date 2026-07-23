@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://suynda.com/schemas/reference.schema.json",
+  "title": "Suynda Cross-Module Reference Convention",
+  "description": "Convention for a consumer row pointing at another module's entity (§5.2, §5.5). Not a table — a documented shape others compose. No JSONB. Column names use the entity stem (e.g. party → party_id, party_nombre_cache).",
+  "$defs": {
+    "referenceColumns": {
+      "type": "object",
+      "description": "Columns a consumer holds for a foreign entity. {entidad} is the stem (party, item, branch, …).",
+      "properties": {
+        "{entidad}_id": {
+          "type": "string",
+          "description": "The reference, indexed. e.g. party_id"
+        },
+        "{entidad}_nombre_cache": {
+          "type": "string",
+          "description": "Display-only cache; never editable by the consumer (§5.5)"
+        },
+        "{entidad}_cache_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the cache snapshot"
+        },
+        "{entidad}_entity_version": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "For out-of-order event handling (§6.4)"
+        },
+        "{entidad}_owner": {
+          "type": "string",
+          "description": "Only when the owner can vary. For padron entities the owner is implicit — omit this column."
+        }
+      },
+      "required": [
+        "{entidad}_id",
+        "{entidad}_nombre_cache",
+        "{entidad}_cache_at",
+        "{entidad}_entity_version"
+      ],
+      "additionalProperties": false
+    },
+    "partyReference": {
+      "type": "object",
+      "description": "Concrete example: reference to a padron Party (owner implicit — no party_owner).",
+      "properties": {
+        "party_id": { "type": "string", "minLength": 1 },
+        "party_nombre_cache": { "type": "string" },
+        "party_cache_at": { "type": "string", "format": "date-time" },
+        "party_entity_version": { "type": "integer", "minimum": 0 }
+      },
+      "required": [
+        "party_id",
+        "party_nombre_cache",
+        "party_cache_at",
+        "party_entity_version"
+      ],
+      "additionalProperties": false
+    },
+    "itemReference": {
+      "type": "object",
+      "description": "Concrete example: reference to a padron Item (owner implicit — no item_owner).",
+      "properties": {
+        "item_id": { "type": "string", "minLength": 1 },
+        "item_nombre_cache": { "type": "string" },
+        "item_cache_at": { "type": "string", "format": "date-time" },
+        "item_entity_version": { "type": "integer", "minimum": 0 }
+      },
+      "required": [
+        "item_id",
+        "item_nombre_cache",
+        "item_cache_at",
+        "item_entity_version"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
