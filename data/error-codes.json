@@ -148,6 +148,31 @@
       "code": "RATE_LIMITED",
       "http": 429,
       "message_es": "Demasiadas solicitudes; probá de nuevo en un momento"
+    },
+    {
+      "code": "COMPRA_DOCUMENT_NOT_FOUND",
+      "http": 404,
+      "message_es": "No se encontró el documento de gasto indicado"
+    },
+    {
+      "code": "COMPRA_DOCUMENT_DUPLICATE",
+      "http": 409,
+      "message_es": "Ya se registró un documento con ese timbrado y número"
+    },
+    {
+      "code": "COMPRA_SUPPLIER_UNRESOLVED",
+      "http": 409,
+      "message_es": "No se pudo resolver el proveedor: el padrón no respondió o el RUC no es válido"
+    },
+    {
+      "code": "COMPRA_FISCAL_STATE_INVALID",
+      "http": 409,
+      "message_es": "El estado fiscal del documento no permite esta operación"
+    },
+    {
+      "code": "COMPRA_APPROVAL_MOTIVO_REQUIRED",
+      "http": 422,
+      "message_es": "Aprobar un documento no verificado requiere un motivo"
     }
   ]
 }

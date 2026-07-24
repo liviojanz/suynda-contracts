@@ -3,7 +3,8 @@
   "_notes": [
     "Solo claves y descripciones. Los costos en créditos viven en operation_costs de la Foundation (§7.6.4) — nunca acá.",
     "Lista de claves aún abierta (v4.3 §14 #1); confirmar antes de fase 4.",
-    "deposito no tiene operación medida en v1 — regalo deliberado (§7.6.4)."
+    "deposito no tiene operación medida en v1 — regalo deliberado (§7.6.4).",
+    "compra (Fase 0): reconciliation.run eliminada (D6, export/reconcile es de contabilidad); document.process_ai renombrada a document.extract_ocr. Keys SIN prefijo — el campo module namespacea (capabilities.json usa keys prefijadas, es otro artefacto)."
   ],
   "operations": [
     {
@@ -18,13 +19,33 @@
     },
     {
       "module": "compra",
-      "operation_key": "document.process_ai",
-      "descripcion": "OCR + extracción de un documento"
+      "operation_key": "document.extract_ocr",
+      "descripcion": "OCR + extracción por Vision de un documento"
     },
     {
       "module": "compra",
-      "operation_key": "reconciliation.run",
-      "descripcion": "conciliación Hechauka"
+      "operation_key": "document.enter_manual",
+      "descripcion": "alta manual de un documento, sin OCR"
+    },
+    {
+      "module": "compra",
+      "operation_key": "document.extract_xml",
+      "descripcion": "parseo de XML nativo, sin Vision"
+    },
+    {
+      "module": "compra",
+      "operation_key": "ingest.scanner",
+      "descripcion": "captura de un documento por el canal scanner"
+    },
+    {
+      "module": "compra",
+      "operation_key": "fiscal.verify",
+      "descripcion": "verificación fiscal DNIT por factura (RUC + timbrado)"
+    },
+    {
+      "module": "compra",
+      "operation_key": "fiscal.verify_ruc",
+      "descripcion": "verificación fiscal DNIT de un RUC standalone"
     },
     {
       "module": "lab",

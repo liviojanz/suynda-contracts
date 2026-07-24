@@ -49,6 +49,36 @@
       "key": "roles.change",
       "availability": "FAIL_CLOSED",
       "initiator": "user"
+    },
+    {
+      "key": "compra.document.read",
+      "availability": "FAIL_OPEN",
+      "initiator": "both"
+    },
+    {
+      "key": "compra.document.capture",
+      "availability": "FAIL_OPEN",
+      "initiator": "both"
+    },
+    {
+      "key": "compra.document.extract",
+      "availability": "FAIL_AFTER_GRACE",
+      "initiator": "both"
+    },
+    {
+      "key": "compra.document.write",
+      "availability": "FAIL_AFTER_GRACE",
+      "initiator": "both"
+    },
+    {
+      "key": "compra.fiscal.verify",
+      "availability": "FAIL_AFTER_GRACE",
+      "initiator": "both"
+    },
+    {
+      "key": "compra.document.approve",
+      "availability": "FAIL_AFTER_GRACE",
+      "initiator": "user"
     }
   ]
 }

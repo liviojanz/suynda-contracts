@@ -31,5 +31,12 @@
     "_note": "Membership role within a tenant. `privileged` roles require a personal identity (§2.4.4) and cannot be created by password-only admin provisioning.",
     "values": ["owner", "admin", "empleado"],
     "privileged": ["owner", "admin"]
+  },
+  "FiscalStatus": ["verificado", "observado", "error_servicio", "pendiente", "no_aplica"],
+  "DocumentState": ["capturada", "normalizada", "clasificada", "verificada", "aprobada", "rechazada"],
+  "CategoriaGasto": {
+    "_status": "PROPUESTO",
+    "_note": "Clasificación propia de compra; contabilidad la mapea a cuenta (D5). Valores a cosechar del classifier de facturas-py antes de congelar — ver §11 #3.",
+    "values": []
   }
 }

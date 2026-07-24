@@ -40,6 +40,8 @@
         "document.rejected",
         "purchase.registered",
         "purchase.approved",
+        "purchase.rejected",
+        "supplier.fiscal_verified",
         "employee.status_changed",
         "tenant.module_activated",
         "tenant.module_deactivated",

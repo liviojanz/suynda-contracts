@@ -78,6 +78,9 @@ console.log('data has "precio', /"precio/.test(dataText));
 const expectedEvents = JSON.parse(
   readFileSync(join("data", "events.json"), "utf8"),
 ).map((e) => e.type);
+const expectedMetered = JSON.parse(
+  readFileSync(join("data", "metered-operations.json"), "utf8"),
+).operations.length;
 const actualTypes = EVENTS.map((e) => e.type);
 const missing = expectedEvents.filter((t) => !actualTypes.includes(t));
 const extra = actualTypes.filter((t) => !expectedEvents.includes(t));
@@ -103,7 +106,7 @@ const pass =
   extra.length === 0 &&
   schema.additionalProperties === false &&
   !/"creditos"\s*:/.test(dataText) &&
-  METERED_OPERATIONS.length === 9;
+  METERED_OPERATIONS.length === expectedMetered;
 
 console.log(pass ? "\nDoD CHECK: PASS" : "\nDoD CHECK: FAIL");
 process.exit(pass ? 0 : 1);
