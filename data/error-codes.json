@@ -113,6 +113,31 @@
       "code": "AUTH_LAST_ADMIN_CHANNEL",
       "http": 409,
       "message_es": "No se puede revocar: el tenant quedaría sin un canal externo de administración"
+    },
+    {
+      "code": "PADRON_CONSUMIDOR_FINAL_PROTECTED",
+      "http": 409,
+      "message_es": "El Consumidor Final no puede darse de baja"
+    },
+    {
+      "code": "PADRON_ITEM_CODE_CONFLICT",
+      "http": 409,
+      "message_es": "Ya existe un ítem con ese código"
+    },
+    {
+      "code": "PADRON_BRANCH_NOT_FOUND",
+      "http": 404,
+      "message_es": "No se encontró la sucursal indicada"
+    },
+    {
+      "code": "IDEMPOTENCY_KEY_REQUIRED",
+      "http": 400,
+      "message_es": "Falta el encabezado Idempotency-Key"
+    },
+    {
+      "code": "IDEMPOTENCY_IN_PROGRESS",
+      "http": 409,
+      "message_es": "La operación con esa clave todavía está en curso"
     }
   ]
 }
