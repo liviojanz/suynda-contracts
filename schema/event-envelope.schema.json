@@ -47,7 +47,8 @@
         "credits.granted",
         "credits.low_balance",
         "credits.exhausted",
-        "credits.overdraft_started"
+        "credits.overdraft_started",
+        "credits.operation_unpriced"
       ]
     },
     "version": {

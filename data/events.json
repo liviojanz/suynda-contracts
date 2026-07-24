@@ -25,5 +25,6 @@
   { "type": "credits.granted", "origen_module": "foundation", "version": 1 },
   { "type": "credits.low_balance", "origen_module": "foundation", "version": 1 },
   { "type": "credits.exhausted", "origen_module": "foundation", "version": 1 },
-  { "type": "credits.overdraft_started", "origen_module": "foundation", "version": 1 }
+  { "type": "credits.overdraft_started", "origen_module": "foundation", "version": 1 },
+  { "type": "credits.operation_unpriced", "origen_module": "foundation", "version": 1 }
 ]

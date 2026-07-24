@@ -65,11 +65,6 @@
       "message_es": "La ventana de sobregiro venció"
     },
     {
-      "code": "IDEMPOTENCY_REPLAY",
-      "http": 200,
-      "message_es": "La operación ya fue procesada; se devuelve el resultado anterior"
-    },
-    {
       "code": "EVENT_ENVELOPE_INVALID",
       "http": 400,
       "message_es": "El sobre del evento no es válido"
@@ -138,11 +133,6 @@
       "code": "IDEMPOTENCY_IN_PROGRESS",
       "http": 409,
       "message_es": "La operación con esa clave todavía está en curso"
-    },
-    {
-      "code": "CREDITS_OPERATION_UNPRICED",
-      "http": 500,
-      "message_es": "La operación no tiene costo configurado"
     },
     {
       "code": "SIGNUP_NOT_FOUND",

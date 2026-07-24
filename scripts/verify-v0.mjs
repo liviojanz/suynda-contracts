@@ -101,6 +101,7 @@ const expectedEvents = [
   "credits.low_balance",
   "credits.exhausted",
   "credits.overdraft_started",
+  "credits.operation_unpriced",
 ];
 const actualTypes = EVENTS.map((e) => e.type);
 const missing = expectedEvents.filter((t) => !actualTypes.includes(t));
@@ -122,7 +123,7 @@ const pass =
   ok2.ok === false &&
   MODULES.length === 15 &&
   MODULE_KEYS.length === 15 &&
-  EVENTS.length === 27 &&
+  EVENTS.length === 28 &&
   missing.length === 0 &&
   extra.length === 0 &&
   schema.additionalProperties === false &&
