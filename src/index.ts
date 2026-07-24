@@ -14,6 +14,8 @@ export {
   CREDENTIAL_TYPES,
   IDENTIFIER_TYPES,
   PLAN_KEYS,
+  ROLE_KEYS,
+  PRIVILEGED_ROLE_KEYS,
   ENUMS,
   type ModuleKey,
   type ModuleClass,
@@ -23,6 +25,7 @@ export {
   type CredentialType,
   type IdentifierType,
   type PlanKey,
+  type Role,
 } from "./enums.js";
 
 export {

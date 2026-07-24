@@ -25,5 +25,11 @@
   "PlanKey": {
     "_status": "PROPUESTO",
     "values": ["base", "plus", "max"]
+  },
+  "Role": {
+    "_status": "PROPUESTO",
+    "_note": "Membership role within a tenant. `privileged` roles require a personal identity (§2.4.4) and cannot be created by password-only admin provisioning.",
+    "values": ["owner", "admin", "empleado"],
+    "privileged": ["owner", "admin"]
   }
 }

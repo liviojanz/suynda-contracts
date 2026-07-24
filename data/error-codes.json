@@ -73,6 +73,46 @@
       "code": "EVENT_ENVELOPE_INVALID",
       "http": 400,
       "message_es": "El sobre del evento no es válido"
+    },
+    {
+      "code": "AUTH_TOKEN_INVALID",
+      "http": 401,
+      "message_es": "La sesión no es válida o venció"
+    },
+    {
+      "code": "AUTH_UNAUTHENTICATED",
+      "http": 401,
+      "message_es": "Necesitás iniciar sesión"
+    },
+    {
+      "code": "AUTH_OTP_THROTTLED",
+      "http": 429,
+      "message_es": "Pediste demasiados códigos; esperá unos minutos"
+    },
+    {
+      "code": "AUTH_IDENTITY_TAKEN",
+      "http": 409,
+      "message_es": "Ese usuario ya está en uso"
+    },
+    {
+      "code": "AUTH_IDENTITY_NOT_FOUND",
+      "http": 404,
+      "message_es": "No se encontró la identidad indicada"
+    },
+    {
+      "code": "AUTH_PASSWORD_WEAK",
+      "http": 400,
+      "message_es": "La contraseña no cumple el mínimo requerido"
+    },
+    {
+      "code": "AUTH_PRIVILEGED_NEEDS_PERSONAL",
+      "http": 403,
+      "message_es": "Los roles privilegiados requieren una identidad personal, no sólo contraseña"
+    },
+    {
+      "code": "AUTH_LAST_ADMIN_CHANNEL",
+      "http": 409,
+      "message_es": "No se puede revocar: el tenant quedaría sin un canal externo de administración"
     }
   ]
 }
