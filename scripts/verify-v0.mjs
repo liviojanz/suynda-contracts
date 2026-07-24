@@ -72,37 +72,12 @@ const dataText = dataFiles.map((f) => readFileSync(f, "utf8")).join("\n");
 console.log('data has "creditos":', /"creditos"\s*:/.test(dataText));
 console.log('data has "precio', /"precio/.test(dataText));
 
-// Expected event types from spec §5
-const expectedEvents = [
-  "party.created",
-  "party.updated",
-  "party.role_added",
-  "party.role_deactivated",
-  "party.deleted",
-  "item.created",
-  "item.updated",
-  "item.deleted",
-  "branch.created",
-  "branch.updated",
-  "tax_rate.published",
-  "stock.adjusted",
-  "stock.transferred",
-  "sale.completed",
-  "sale.voided",
-  "document.approved",
-  "document.rejected",
-  "purchase.registered",
-  "purchase.approved",
-  "employee.status_changed",
-  "tenant.module_activated",
-  "tenant.module_deactivated",
-  "tenant.provisioned",
-  "credits.granted",
-  "credits.low_balance",
-  "credits.exhausted",
-  "credits.overdraft_started",
-  "credits.operation_unpriced",
-];
+// Expected event types — derived from the canonical source (data/events.json),
+// not hand-maintained here. This keeps the check as "the BUILT bundle (EVENTS in
+// dist) still reflects the source rows" instead of a third hand-kept copy.
+const expectedEvents = JSON.parse(
+  readFileSync(join("data", "events.json"), "utf8"),
+).map((e) => e.type);
 const actualTypes = EVENTS.map((e) => e.type);
 const missing = expectedEvents.filter((t) => !actualTypes.includes(t));
 const extra = actualTypes.filter((t) => !expectedEvents.includes(t));
@@ -123,7 +98,7 @@ const pass =
   ok2.ok === false &&
   MODULES.length === 15 &&
   MODULE_KEYS.length === 15 &&
-  EVENTS.length === 28 &&
+  EVENTS.length === expectedEvents.length &&
   missing.length === 0 &&
   extra.length === 0 &&
   schema.additionalProperties === false &&
