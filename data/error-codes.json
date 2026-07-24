@@ -138,6 +138,21 @@
       "code": "IDEMPOTENCY_IN_PROGRESS",
       "http": 409,
       "message_es": "La operación con esa clave todavía está en curso"
+    },
+    {
+      "code": "CREDITS_OPERATION_UNPRICED",
+      "http": 500,
+      "message_es": "La operación no tiene costo configurado"
+    },
+    {
+      "code": "SIGNUP_NOT_FOUND",
+      "http": 404,
+      "message_es": "No se encontró la postulación indicada"
+    },
+    {
+      "code": "PRICING_RETROACTIVE",
+      "http": 400,
+      "message_es": "Un cambio de precio no puede tener vigencia retroactiva"
     }
   ]
 }
