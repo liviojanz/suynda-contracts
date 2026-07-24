@@ -153,6 +153,11 @@
       "code": "PRICING_RETROACTIVE",
       "http": 400,
       "message_es": "Un cambio de precio no puede tener vigencia retroactiva"
+    },
+    {
+      "code": "RATE_LIMITED",
+      "http": 429,
+      "message_es": "Demasiadas solicitudes; probá de nuevo en un momento"
     }
   ]
 }
