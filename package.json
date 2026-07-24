@@ -19,6 +19,8 @@
     "schema"
   ],
   "scripts": {
+    "generate:schema": "node scripts/generate-schema.mjs",
+    "prebuild": "node scripts/generate-schema.mjs",
     "build": "tsc",
     "prepublishOnly": "npm run build"
   },

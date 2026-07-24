@@ -19,7 +19,7 @@
   "properties": {
     "event": {
       "type": "string",
-      "description": "EventType from data/events.json",
+      "description": "EventType — GENERATED from data/events.json by scripts/generate-schema.mjs. Do not edit by hand.",
       "enum": [
         "party.created",
         "party.updated",
@@ -67,7 +67,7 @@
     },
     "origen_module": {
       "type": "string",
-      "description": "ModuleKey of the owner that emitted the event",
+      "description": "ModuleKey of the owner that emitted the event — GENERATED from data/modules.json by scripts/generate-schema.mjs. Do not edit by hand.",
       "enum": [
         "foundation",
         "padron",
@@ -90,7 +90,9 @@
       "type": "object",
       "description": "Reference only — never business payload",
       "additionalProperties": false,
-      "required": ["id"],
+      "required": [
+        "id"
+      ],
       "properties": {
         "id": {
           "type": "string",
