@@ -81,17 +81,33 @@ envelope_schema = json.loads(
 
 ## Versioning
 
-- Semver; this package starts at `0.1.0`.
+- Semver; this package starts at `0.1.0`. The release `v0.1.0` is tagged in git.
 - Structural changes during Foundation phases 1–3 bump the minor.
 - Metered-operation **keys** may still be added (minor, additive) before phase 4.
 - **Values never enter this package** — they live in Foundation config.
+
+> **The tag is a marker, not a pin (today).** The consumers (`suynda-foundation`,
+> `suynda-padron`) depend on this package via `"@suynda/contracts": "file:../suynda-contracts"`
+> — a filesystem symlink. They therefore always compile against the **working-tree
+> HEAD** of this repo, regardless of which tag exists: a breaking change here reaches
+> both consumers immediately, with no version gate. `v0.1.0` records "this is the
+> contract as of now"; it does **not** pin anyone to it. To make the tag a real pin,
+> publish the package (registry or versioned tarball) and switch the consumers to a
+> semver range (`"@suynda/contracts": "^0.1.0"`). Until then, bump the version + move
+> the tag on every contract change, and treat any change here as affecting all
+> consumers at once.
 
 ## Build
 
 ```bash
 npm install
-npm run build
+npm run build   # `prebuild` regenerates the envelope schema enums from data/ first
 ```
+
+The `event` / `origen_module` enums in `schema/event-envelope.schema.json` are
+**generated** from `data/events.json` and `data/modules.json` by
+`scripts/generate-schema.mjs` (run as `prebuild`). Do not hand-edit those enums —
+edit the data files and rebuild.
 
 ## Rules for contributors
 
