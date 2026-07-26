@@ -173,6 +173,26 @@
       "code": "COMPRA_APPROVAL_MOTIVO_REQUIRED",
       "http": 422,
       "message_es": "Aprobar un documento no verificado requiere un motivo"
+    },
+    {
+      "code": "TENANT_NOT_FOUND",
+      "http": 404,
+      "message_es": "No se encontró el tenant indicado"
+    },
+    {
+      "code": "TENANT_SLUG_INVALID",
+      "http": 400,
+      "message_es": "El slug no cumple el formato requerido"
+    },
+    {
+      "code": "TENANT_SLUG_TAKEN",
+      "http": 409,
+      "message_es": "Ese slug ya está en uso"
+    },
+    {
+      "code": "TENANT_SLUG_IMMUTABLE",
+      "http": 409,
+      "message_es": "El slug no se puede cambiar: ya hay nombres de usuario compuestos con él"
     }
   ]
 }
