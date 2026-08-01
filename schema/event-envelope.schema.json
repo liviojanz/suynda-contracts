@@ -50,7 +50,11 @@
         "credits.low_balance",
         "credits.exhausted",
         "credits.overdraft_started",
-        "credits.operation_unpriced"
+        "credits.operation_unpriced",
+        "module_grant.created",
+        "module_grant.role_changed",
+        "module_grant.suspended",
+        "module_grant.reactivated"
       ]
     },
     "version": {

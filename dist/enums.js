@@ -14,8 +14,9 @@ export const IDENTIFIER_TYPES = enumsData.IdentifierType;
 /** [PROPUESTO] plan keys — prices live in Foundation module_plans, never here. */
 export const PLAN_KEYS = enumsData.PlanKey.values;
 /**
- * [PROPUESTO] membership roles within a tenant. `PRIVILEGED_ROLE_KEYS` require a
- * personal identity (§2.4.4) and cannot be created by password-only provisioning.
+ * [PROPUESTO] membership roles within a tenant (catálogo C7).
+ * `PRIVILEGED_ROLE_KEYS` require a personal identity (§2.4.4) and cannot be
+ * created by password-only provisioning.
  */
 export const ROLE_KEYS = enumsData.Role.values;
 export const PRIVILEGED_ROLE_KEYS = enumsData.Role.privileged;

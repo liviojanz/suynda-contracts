@@ -1,0 +1,34 @@
+{
+  "module_key": "compra",
+  "manifest_version": 1,
+  "functions": [
+    { "function_key": "ver_facturas", "nombre": "Ver facturas", "descripcion": "Listar y ver el detalle de facturas, incluidos los avisos de duplicado", "autorizada_por_canal": false, "orden": 1 },
+    { "function_key": "editar_facturas", "nombre": "Editar facturas", "descripcion": "Reasignar cliente y corregir campos extraídos", "autorizada_por_canal": false, "orden": 2 },
+    { "function_key": "aprobar_facturas", "nombre": "Aprobar facturas", "descripcion": "Aprobar facturas, incluida la aprobación en lote", "autorizada_por_canal": false, "orden": 3 },
+    { "function_key": "rechazar_facturas", "nombre": "Rechazar facturas", "descripcion": "Rechazar facturas, incluido el rechazo en lote", "autorizada_por_canal": false, "orden": 4 },
+    { "function_key": "reabrir_facturas", "nombre": "Reabrir facturas", "descripcion": "Volver a estado pendiente una factura ya resuelta", "autorizada_por_canal": false, "orden": 5 },
+    { "function_key": "verificar_fiscal_ad_hoc", "nombre": "Verificación DNIT puntual", "descripcion": "Disparar una verificación fiscal DNIT sobre una factura", "autorizada_por_canal": false, "orden": 6 },
+    { "function_key": "reprocesar_facturas", "nombre": "Reprocesar facturas", "descripcion": "Reenviar una factura al circuito de extracción", "autorizada_por_canal": false, "orden": 7 },
+    { "function_key": "exportar_comprobantes", "nombre": "Exportar comprobantes", "descripcion": "Generar y descargar exportaciones, incluido Marangatu estándar y perfiles propios", "autorizada_por_canal": false, "orden": 8 },
+    { "function_key": "gestionar_perfiles_exportacion", "nombre": "Gestionar perfiles de exportación", "descripcion": "Crear y editar perfiles, analizar plantillas", "autorizada_por_canal": false, "orden": 9 },
+    { "function_key": "conciliar_marangatu", "nombre": "Conciliar con Marangatu", "descripcion": "Fusionar con el archivo descargado de Marangatu", "autorizada_por_canal": false, "orden": 10 },
+    { "function_key": "gestionar_clientes", "nombre": "Gestionar clientes", "descripcion": "Administrar las entidades cliente de la organización", "autorizada_por_canal": false, "orden": 11 },
+    { "function_key": "gestionar_cuentas_contables", "nombre": "Gestionar cuentas contables", "descripcion": "Administrar el plan de cuentas", "autorizada_por_canal": false, "orden": 12 },
+    { "function_key": "ver_actividad", "nombre": "Ver actividad", "descripcion": "Log de ingesta y auditoría", "autorizada_por_canal": false, "orden": 13 },
+    { "function_key": "configurar_verificacion_fiscal", "nombre": "Configurar verificación fiscal", "descripcion": "Administrar la API key de DNIT", "autorizada_por_canal": false, "orden": 14 },
+    { "function_key": "cargar_facturas", "nombre": "Cargar facturas", "descripcion": "Enviar comprobantes por WhatsApp, email o subida manual; el canal es la autorización", "autorizada_por_canal": true, "orden": 15 }
+  ],
+  "roles": [
+    { "role_key": "superadmin", "nombre": "Superadmin", "orden": 1, "functions": ["ver_facturas","editar_facturas","aprobar_facturas","rechazar_facturas","reabrir_facturas","verificar_fiscal_ad_hoc","reprocesar_facturas","exportar_comprobantes","gestionar_perfiles_exportacion","conciliar_marangatu","gestionar_clientes","gestionar_cuentas_contables","ver_actividad","configurar_verificacion_fiscal","cargar_facturas"] },
+    { "role_key": "admin", "nombre": "Admin", "orden": 2, "functions": ["ver_facturas","editar_facturas","aprobar_facturas","rechazar_facturas","reabrir_facturas","verificar_fiscal_ad_hoc","reprocesar_facturas","exportar_comprobantes","gestionar_perfiles_exportacion","conciliar_marangatu","gestionar_clientes","gestionar_cuentas_contables","ver_actividad","cargar_facturas"] },
+    { "role_key": "approver", "nombre": "Aprobador", "orden": 3, "functions": ["ver_facturas","editar_facturas","aprobar_facturas","rechazar_facturas","reabrir_facturas","verificar_fiscal_ad_hoc","exportar_comprobantes","gestionar_perfiles_exportacion","conciliar_marangatu","gestionar_clientes","gestionar_cuentas_contables","ver_actividad","cargar_facturas"] },
+    { "role_key": "uploader", "nombre": "Cargador", "orden": 4, "functions": ["cargar_facturas"] }
+  ],
+  "role_grant_matrix": {
+    "superadmin": ["superadmin","admin","approver","uploader"],
+    "admin": ["admin","approver","uploader"],
+    "approver": [],
+    "uploader": []
+  },
+  "mandate_types": []
+}

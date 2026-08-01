@@ -32,8 +32,9 @@ export const PLAN_KEYS = enumsData.PlanKey.values;
 export type PlanKey = (typeof PLAN_KEYS)[number];
 
 /**
- * [PROPUESTO] membership roles within a tenant. `PRIVILEGED_ROLE_KEYS` require a
- * personal identity (§2.4.4) and cannot be created by password-only provisioning.
+ * [PROPUESTO] membership roles within a tenant (catálogo C7).
+ * `PRIVILEGED_ROLE_KEYS` require a personal identity (§2.4.4) and cannot be
+ * created by password-only provisioning.
  */
 export const ROLE_KEYS = enumsData.Role.values;
 export type Role = (typeof ROLE_KEYS)[number];

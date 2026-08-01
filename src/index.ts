@@ -35,6 +35,15 @@ export {
 } from "./modules.js";
 
 export {
+  COMPRA_MANIFEST,
+  MANIFESTS,
+  manifestByModuleKey,
+  type ModuleManifest,
+  type ManifestFunction,
+  type ManifestRole,
+} from "./manifests.js";
+
+export {
   EVENTS,
   EVENT_TYPES,
   type EventCatalogEntry,

@@ -21,8 +21,9 @@ export type IdentifierType = (typeof IDENTIFIER_TYPES)[number];
 export declare const PLAN_KEYS: string[];
 export type PlanKey = (typeof PLAN_KEYS)[number];
 /**
- * [PROPUESTO] membership roles within a tenant. `PRIVILEGED_ROLE_KEYS` require a
- * personal identity (§2.4.4) and cannot be created by password-only provisioning.
+ * [PROPUESTO] membership roles within a tenant (catálogo C7).
+ * `PRIVILEGED_ROLE_KEYS` require a personal identity (§2.4.4) and cannot be
+ * created by password-only provisioning.
  */
 export declare const ROLE_KEYS: string[];
 export type Role = (typeof ROLE_KEYS)[number];

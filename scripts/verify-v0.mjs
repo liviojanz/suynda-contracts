@@ -8,9 +8,87 @@ import {
   METERED_OPERATIONS,
   ENUMS,
   PLAN_KEYS,
+  ROLE_KEYS,
+  PRIVILEGED_ROLE_KEYS,
+  COMPRA_MANIFEST,
 } from "../dist/index.js";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
+
+function sorted(arr) {
+  return [...arr].sort();
+}
+
+function sameSet(a, b) {
+  return JSON.stringify(sorted(a)) === JSON.stringify(sorted(b));
+}
+
+/** Internal checks for data/manifests/compra.json (Bloque 1 / 6.1). */
+function verifyCompraManifest(m) {
+  const errors = [];
+  const fnKeys = new Set(m.functions.map((f) => f.function_key));
+  const roleKeys = new Set(m.roles.map((r) => r.role_key));
+  const byRole = Object.fromEntries(
+    m.roles.map((r) => [r.role_key, r.functions]),
+  );
+
+  const superadmin = byRole.superadmin ?? [];
+  const admin = byRole.admin ?? [];
+  const approver = byRole.approver ?? [];
+  const uploader = byRole.uploader ?? [];
+
+  const expectedSuper = sorted([...admin, "configurar_verificacion_fiscal"]);
+  if (!sameSet(superadmin, expectedSuper)) {
+    errors.push(
+      `superadmin must equal admin + configurar_verificacion_fiscal; got ${JSON.stringify(sorted(superadmin))}`,
+    );
+  }
+
+  const expectedApprover = sorted(
+    admin.filter((f) => f !== "reprocesar_facturas"),
+  );
+  if (!sameSet(approver, expectedApprover)) {
+    errors.push(
+      `approver must equal admin − reprocesar_facturas; got ${JSON.stringify(sorted(approver))}`,
+    );
+  }
+
+  if (!sameSet(uploader, ["cargar_facturas"])) {
+    errors.push(
+      `uploader must be only cargar_facturas; got ${JSON.stringify(uploader)}`,
+    );
+  }
+
+  for (const role of m.roles) {
+    for (const fk of role.functions) {
+      if (!fnKeys.has(fk)) {
+        errors.push(`role ${role.role_key} references unknown function ${fk}`);
+      }
+    }
+  }
+
+  for (const [grantor, grantees] of Object.entries(m.role_grant_matrix)) {
+    if (!roleKeys.has(grantor)) {
+      errors.push(`role_grant_matrix key unknown: ${grantor}`);
+    }
+    for (const g of grantees) {
+      if (!roleKeys.has(g)) {
+        errors.push(`role_grant_matrix[${grantor}] grants unknown role ${g}`);
+      }
+    }
+  }
+
+  for (const f of m.functions) {
+    const expectCanal = f.function_key === "cargar_facturas";
+    if (f.autorizada_por_canal !== expectCanal) {
+      errors.push(
+        `${f.function_key}: autorizada_por_canal should be ${expectCanal}`,
+      );
+    }
+  }
+
+  return errors;
+}
 
 function walk(dir) {
   const out = [];
@@ -96,6 +174,25 @@ console.log(
   schema.additionalProperties,
 );
 
+const rolesOk =
+  JSON.stringify(ROLE_KEYS) ===
+    JSON.stringify(["superadmin", "admin", "approver", "uploader"]) &&
+  JSON.stringify(PRIVILEGED_ROLE_KEYS) ===
+    JSON.stringify(["superadmin", "admin"]);
+console.log("Role C7 catalog:", rolesOk, ROLE_KEYS, PRIVILEGED_ROLE_KEYS);
+
+const manifestErrors = verifyCompraManifest(COMPRA_MANIFEST);
+console.log("compra manifest checks:", manifestErrors.length === 0 ? "ok" : manifestErrors);
+
+const grantEvents = [
+  "module_grant.created",
+  "module_grant.role_changed",
+  "module_grant.suspended",
+  "module_grant.reactivated",
+];
+const grantEventsOk = grantEvents.every((t) => actualTypes.includes(t));
+console.log("module_grant events present:", grantEventsOk);
+
 const pass =
   ok1.ok === true &&
   ok2.ok === false &&
@@ -106,7 +203,10 @@ const pass =
   extra.length === 0 &&
   schema.additionalProperties === false &&
   !/"creditos"\s*:/.test(dataText) &&
-  METERED_OPERATIONS.length === expectedMetered;
+  METERED_OPERATIONS.length === expectedMetered &&
+  rolesOk &&
+  manifestErrors.length === 0 &&
+  grantEventsOk;
 
 console.log(pass ? "\nDoD CHECK: PASS" : "\nDoD CHECK: FAIL");
 process.exit(pass ? 0 : 1);

@@ -28,9 +28,9 @@
   },
   "Role": {
     "_status": "PROPUESTO",
-    "_note": "Membership role within a tenant. `privileged` roles require a personal identity (§2.4.4) and cannot be created by password-only admin provisioning.",
-    "values": ["owner", "admin", "empleado"],
-    "privileged": ["owner", "admin"]
+    "_note": "Membership role within a tenant (catálogo C7 — alineado a foundation CHECK 023_invitations.sql y invitations/service.ts ROLE_MATRIX). `privileged` roles require a personal identity (§2.4.4) and cannot be created by password-only admin provisioning. BREAKING vs 0.3.0: owner/empleado removed; superadmin/approver/uploader added.",
+    "values": ["superadmin", "admin", "approver", "uploader"],
+    "privileged": ["superadmin", "admin"]
   },
   "FiscalStatus": ["verificado", "observado", "error_servicio", "pendiente", "no_aplica"],
   "DocumentState": ["capturada", "normalizada", "clasificada", "verificada", "aprobada", "rechazada"],
