@@ -46,6 +46,7 @@
         "tenant.module_activated",
         "tenant.module_deactivated",
         "tenant.provisioned",
+        "tenant.reclamada",
         "credits.granted",
         "credits.low_balance",
         "credits.exhausted",

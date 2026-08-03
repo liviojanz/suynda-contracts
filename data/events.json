@@ -24,6 +24,7 @@
   { "type": "tenant.module_activated", "origen_module": "foundation", "version": 1 },
   { "type": "tenant.module_deactivated", "origen_module": "foundation", "version": 1 },
   { "type": "tenant.provisioned", "origen_module": "foundation", "version": 1 },
+  { "type": "tenant.reclamada", "origen_module": "foundation", "version": 1 },
   { "type": "credits.granted", "origen_module": "foundation", "version": 1 },
   { "type": "credits.low_balance", "origen_module": "foundation", "version": 1 },
   { "type": "credits.exhausted", "origen_module": "foundation", "version": 1 },
