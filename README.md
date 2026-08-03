@@ -79,6 +79,23 @@ envelope_schema = json.loads(
 # Validate with jsonschema / referencing against envelope_schema
 ```
 
+### Python + Ed25519 tokens (gotcha)
+
+Foundation signs both user and service JWTs with the JOSE algorithm name **`Ed25519`** — its
+JWKS advertise `"alg":"Ed25519"`, **not** the JWA name `EdDSA`. PyJWT ships only `EdDSA`, and
+`PyJWK.from_dict` **rejects** a key whose `alg` is `Ed25519`. So any Python service that
+validates Foundation tokens (or mints service tokens Foundation accepts) must:
+
+- Register an alias once at import: `jwt.register_algorithm("Ed25519", OKPAlgorithm())`, then
+  decode with `algorithms=["Ed25519","EdDSA"]` and sign with `algorithm="Ed25519"` (header alg
+  must be `Ed25519` to match what Foundation emits).
+- Build the Ed25519 keys from the raw JWK bytes (`x` public / `d` private) via
+  `cryptography`'s `Ed25519PublicKey.from_public_bytes` / `Ed25519PrivateKey.from_private_bytes`
+  — do **not** use `PyJWK.from_dict` (it errors on the `Ed25519` alg).
+
+Reference implementation: `suynda-compra/app/platform/jwa.py` (verified against the live
+Foundation JWKS, PyJWT 2.13).
+
 ## Versioning
 
 - Semver; this package starts at `0.1.0`. The release `v0.1.0` is tagged in git.
