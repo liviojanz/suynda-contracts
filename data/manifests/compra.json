@@ -1,6 +1,6 @@
 {
   "module_key": "compra",
-  "manifest_version": 1,
+  "manifest_version": 2,
   "functions": [
     { "function_key": "ver_facturas", "nombre": "Ver facturas", "descripcion": "Listar y ver el detalle de facturas, incluidos los avisos de duplicado", "autorizada_por_canal": false, "orden": 1, "delegable": true },
     { "function_key": "editar_facturas", "nombre": "Editar facturas", "descripcion": "Reasignar cliente y corregir campos extraídos", "autorizada_por_canal": false, "orden": 2, "delegable": true },
