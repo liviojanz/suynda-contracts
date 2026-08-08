@@ -11,6 +11,14 @@ export interface ManifestFunction {
   descripcion: string;
   autorizada_por_canal: boolean;
   orden: number;
+  /**
+   * 6.2 — vocabulario único con atributos, no listas paralelas: la misma
+   * function_key que compone un rol de membresía (roles[].functions) puede
+   * también ser tilde de mandato. `delegable` gobierna eso. `cobrable` (mapeo
+   * a una MeteredOperation) es la extensión futura anotada, NO ejecutada acá
+   * — ver design-mandatos-capa1.md D5 en suynda-foundation.
+   */
+  delegable: boolean;
 }
 
 export interface ManifestRole {
@@ -20,14 +28,28 @@ export interface ManifestRole {
   functions: string[];
 }
 
+/**
+ * Un perfil precargado de mandato (ADR 003 dec. 5: "los tipos de mandato
+ * que entiende" un módulo) — punto de partida ajustable, nunca jaula
+ * (producto-mandatos.md Rev 3 §2). `function_keys` sólo puede listar
+ * function_keys con `delegable: true` en `functions` — Foundation lo valida
+ * al sembrar (falla el arranque si no, no siembra en silencio).
+ */
+export interface ManifestMandateProfile {
+  profile_key: string;
+  nombre: string;
+  orden: number;
+  function_keys: string[];
+}
+
 export interface ModuleManifest {
   module_key: string;
   manifest_version: number;
   functions: ManifestFunction[];
   roles: ManifestRole[];
   role_grant_matrix: Record<string, string[]>;
-  /** Vacío hasta 6.2; ver inventario-cosecha.md §4. */
-  mandate_types: Array<Record<string, unknown>>;
+  /** 6.2 — perfiles de mandato precargados. Ver ManifestMandateProfile. */
+  mandate_types: ManifestMandateProfile[];
 }
 
 export const COMPRA_MANIFEST = compraManifestData as ModuleManifest;

@@ -55,7 +55,12 @@
         "module_grant.created",
         "module_grant.role_changed",
         "module_grant.suspended",
-        "module_grant.reactivated"
+        "module_grant.reactivated",
+        "mandate.proposed",
+        "mandate.accepted",
+        "mandate.rejected",
+        "mandate.cut",
+        "mandate.reactivated"
       ]
     },
     "version": {
