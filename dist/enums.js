@@ -11,6 +11,12 @@ export const PARTY_ROLES = enumsData.PartyRole;
 export const IDENTITY_TYPES = enumsData.IdentityType;
 export const CREDENTIAL_TYPES = enumsData.CredentialType;
 export const IDENTIFIER_TYPES = enumsData.IdentifierType;
+/**
+ * Tipos de asiento del credit_ledger (v0.7.0, Frente 1 corrida A) — migrado
+ * verbatim desde foundation `src/credits/repository.ts` + `welcome_gift`.
+ * Foundation adopta este import en la corrida B del mismo frente.
+ */
+export const LEDGER_TIPOS = enumsData.LedgerTipo.values;
 /** [PROPUESTO] plan keys — prices live in Foundation module_plans, never here. */
 export const PLAN_KEYS = enumsData.PlanKey.values;
 /**
@@ -28,6 +34,7 @@ export const ENUMS = {
     IdentityType: IDENTITY_TYPES,
     CredentialType: CREDENTIAL_TYPES,
     IdentifierType: IDENTIFIER_TYPES,
+    LedgerTipo: LEDGER_TIPOS,
     PlanKey: PLAN_KEYS,
     Role: ROLE_KEYS,
 };

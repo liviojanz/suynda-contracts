@@ -13,6 +13,7 @@ export {
   IDENTITY_TYPES,
   CREDENTIAL_TYPES,
   IDENTIFIER_TYPES,
+  LEDGER_TIPOS,
   PLAN_KEYS,
   ROLE_KEYS,
   PRIVILEGED_ROLE_KEYS,
@@ -24,6 +25,7 @@ export {
   type IdentityType,
   type CredentialType,
   type IdentifierType,
+  type LedgerTipo,
   type PlanKey,
   type Role,
 } from "./enums.js";

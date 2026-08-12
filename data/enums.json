@@ -22,6 +22,20 @@
   "IdentityType": ["phone", "email", "username"],
   "CredentialType": ["password", "pin", "passkey"],
   "IdentifierType": ["RUC", "CI", "PASSPORT", "FOREIGN_TAX_ID"],
+  "LedgerTipo": {
+    "_note": "Tipos de asiento del credit_ledger de Foundation. Migrado verbatim desde foundation src/credits/repository.ts en v0.7.0 (Frente 1, corrida A) — saldaba la desviación de la regla 'every enum comes from contracts' (§11/§6.7). welcome_gift es el regalo de bienvenida por grupo (decisión 3 del mapa Alta+Nexo: ref welcome:<grupo_id>, la idempotencia por ref implementa 'una vez por grupo'). Los montos jamás viven acá (ver CLAUDE.md — commercial values belong to Foundation config).",
+    "values": [
+      "granted",
+      "consumed",
+      "purchased",
+      "bonus_combo",
+      "overdraft",
+      "expired",
+      "adjustment",
+      "unpriced",
+      "welcome_gift"
+    ]
+  },
   "PlanKey": {
     "_status": "PROPUESTO",
     "values": ["base", "plus", "max"]
