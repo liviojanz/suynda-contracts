@@ -26,40 +26,46 @@ function sameSet(a, b) {
   return JSON.stringify(sorted(a)) === JSON.stringify(sorted(b));
 }
 
-/** Internal checks for data/manifests/compra.json (Bloque 1 / 6.1). */
+/**
+ * Internal checks for data/manifests/compra.json (Bloque 1 / 6.1).
+ *
+ * v0.8.1 — RECONCILIACIÓN EQ-3. La aritmética C7 que vivía acá (superadmin =
+ * admin + configurar_verificacion_fiscal; approver = admin − reprocesar;
+ * uploader = solo cargar) describía una derivación rol→función que
+ * **producción apagó el 24-ago-2026** (DELETE manual sobre
+ * module_role_functions, censo FIX-1). El manifiesto ahora declara ese
+ * estado: los cuatro roles con `functions: []`.
+ *
+ * `roles` y `role_grant_matrix` NO se vacían: los roles sostienen la FK de
+ * module_access_grants (034) y la matriz es la autoridad C7 que consume
+ * invitations (foundation catalog/role-grant-matrix.ts). Lo único que muere
+ * es la derivación de funciones.
+ *
+ * El assert que reemplaza a la aritmética es lo que hace SATISFACIBLE el gate
+ * anti-resurrección del Plan v1.1 (enmienda 2): sembrar este manifiesto desde
+ * cero deja module_role_functions de compra en 0, igual que el upgrade.
+ */
 function verifyCompraManifest(m) {
   const errors = [];
   const fnKeys = new Set(m.functions.map((f) => f.function_key));
   const roleKeys = new Set(m.roles.map((r) => r.role_key));
-  const byRole = Object.fromEntries(
-    m.roles.map((r) => [r.role_key, r.functions]),
-  );
 
-  const superadmin = byRole.superadmin ?? [];
-  const admin = byRole.admin ?? [];
-  const approver = byRole.approver ?? [];
-  const uploader = byRole.uploader ?? [];
-
-  const expectedSuper = sorted([...admin, "configurar_verificacion_fiscal"]);
-  if (!sameSet(superadmin, expectedSuper)) {
+  // Los cuatro roles C7 siguen declarados (la FK de module_access_grants y la
+  // matriz de invitations los necesitan) …
+  const C7 = ["superadmin", "admin", "approver", "uploader"];
+  if (!sameSet(m.roles.map((r) => r.role_key), C7)) {
     errors.push(
-      `superadmin must equal admin + configurar_verificacion_fiscal; got ${JSON.stringify(sorted(superadmin))}`,
+      `compra roles must remain exactly ${JSON.stringify(C7)}; got ${JSON.stringify(sorted(m.roles.map((r) => r.role_key)))}`,
     );
   }
-
-  const expectedApprover = sorted(
-    admin.filter((f) => f !== "reprocesar_facturas"),
-  );
-  if (!sameSet(approver, expectedApprover)) {
-    errors.push(
-      `approver must equal admin − reprocesar_facturas; got ${JSON.stringify(sorted(approver))}`,
-    );
-  }
-
-  if (!sameSet(uploader, ["cargar_facturas"])) {
-    errors.push(
-      `uploader must be only cargar_facturas; got ${JSON.stringify(uploader)}`,
-    );
+  // … y NINGUNO deriva funciones. Un rol con functions no vacío resucitaría
+  // la derivación que EQ-3 apagó en producción.
+  for (const role of m.roles) {
+    if (!Array.isArray(role.functions) || role.functions.length !== 0) {
+      errors.push(
+        `compra role ${role.role_key} must declare functions: [] (EQ-3 — la derivación rol→función está apagada); got ${JSON.stringify(role.functions)}`,
+      );
+    }
   }
 
   for (const role of m.roles) {
