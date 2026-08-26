@@ -38,11 +38,13 @@ export {
 
 export {
   COMPRA_MANIFEST,
+  LAB_MANIFEST,
   MANIFESTS,
   manifestByModuleKey,
   type ModuleManifest,
   type ManifestFunction,
   type ManifestRole,
+  type ManifestPermissionPreset,
 } from "./manifests.js";
 
 export {

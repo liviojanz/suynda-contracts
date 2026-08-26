@@ -11,6 +11,9 @@ import {
   ROLE_KEYS,
   PRIVILEGED_ROLE_KEYS,
   COMPRA_MANIFEST,
+  LAB_MANIFEST,
+  MANIFESTS,
+  manifestByModuleKey,
 } from "../dist/index.js";
 import { readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -83,6 +86,170 @@ function verifyCompraManifest(m) {
     if (f.autorizada_por_canal !== expectCanal) {
       errors.push(
         `${f.function_key}: autorizada_por_canal should be ${expectCanal}`,
+      );
+    }
+  }
+
+  return errors;
+}
+
+/**
+ * Guards genéricos v0.8.0 (Plan de Integración Canónica v1.1 §4) — corren
+ * sobre TODOS los manifiestos; compra los pasa trivialmente (sin scopes ni
+ * presets). No tocan la aritmética C7 de verifyCompraManifest.
+ */
+function verifyManifestShared(m) {
+  const errors = [];
+  const fnByKey = new Map(m.functions.map((f) => [f.function_key, f]));
+
+  for (const f of m.functions) {
+    const st = f.scope_type;
+    if (st === undefined || st === null) continue;
+    if (typeof st !== "string" || st.trim() === "") {
+      errors.push(
+        `${m.module_key}/${f.function_key}: scope_type must be omitted, null, or a non-empty string`,
+      );
+      continue;
+    }
+    if (st === "*" || st.toLowerCase() === "all") {
+      errors.push(
+        `${m.module_key}/${f.function_key}: scope_type magic string prohibited (${st})`,
+      );
+    }
+    // Guard firmado: scoped ⇒ no delegable (V1).
+    if (f.delegable !== false) {
+      errors.push(
+        `${m.module_key}/${f.function_key}: scoped function must be delegable: false`,
+      );
+    }
+  }
+
+  // Guard firmado: una función con scope no compone roles.
+  for (const role of m.roles) {
+    for (const fk of role.functions) {
+      const fn = fnByKey.get(fk);
+      if (fn && fn.scope_type !== undefined && fn.scope_type !== null) {
+        errors.push(
+          `${m.module_key}: role ${role.role_key} includes scoped function ${fk}`,
+        );
+      }
+    }
+  }
+
+  // Guard firmado: preset referencia función existente del MISMO manifiesto.
+  const presets = m.permission_presets ?? [];
+  const presetKeys = new Set();
+  for (const p of presets) {
+    if (typeof p.preset_key !== "string" || p.preset_key.trim() === "") {
+      errors.push(`${m.module_key}: preset_key must be a non-empty string`);
+      continue;
+    }
+    if (presetKeys.has(p.preset_key)) {
+      errors.push(`${m.module_key}: duplicate preset_key ${p.preset_key}`);
+    }
+    presetKeys.add(p.preset_key);
+    if (typeof p.nombre !== "string" || p.nombre.trim() === "") {
+      errors.push(`${m.module_key}/${p.preset_key}: preset nombre must be non-empty`);
+    }
+    if (typeof p.orden !== "number") {
+      errors.push(`${m.module_key}/${p.preset_key}: preset orden must be a number`);
+    }
+    if (!Array.isArray(p.functions) || p.functions.length === 0) {
+      errors.push(
+        `${m.module_key}/${p.preset_key}: preset functions must list at least one function_key`,
+      );
+      continue;
+    }
+    for (const fk of p.functions) {
+      if (!fnByKey.has(fk)) {
+        errors.push(
+          `${m.module_key}/${p.preset_key}: preset references unknown function ${fk}`,
+        );
+      }
+    }
+  }
+
+  // Guard firmado (§5.d): los conjuntos de funciones de los presets de un
+  // módulo son distintos entre sí — el rótulo derivado del hub lo exige.
+  // Igualdad de CONJUNTO (dedup + orden-independiente), no del array.
+  const bySetSignature = new Map();
+  for (const p of presets) {
+    if (typeof p.preset_key !== "string" || !Array.isArray(p.functions)) continue;
+    const sig = JSON.stringify(sorted([...new Set(p.functions)]));
+    const prev = bySetSignature.get(sig);
+    if (prev !== undefined) {
+      errors.push(
+        `${m.module_key}: presets ${prev} and ${p.preset_key} share the same function set`,
+      );
+    } else {
+      bySetSignature.set(sig, p.preset_key);
+    }
+  }
+
+  return errors;
+}
+
+/** Las firmas congeladas del manifiesto lab (26-ago) — que no derritan en silencio. */
+function verifyLabManifest(m) {
+  const errors = [];
+  if (m.module_key !== "lab") {
+    errors.push(`lab manifest module_key must be lab; got ${m.module_key}`);
+  }
+  if (m.roles.length !== 0) {
+    errors.push("lab roles must be [] (firma: acceso 100% por tildes)");
+  }
+  if (Object.keys(m.role_grant_matrix).length !== 0) {
+    errors.push("lab role_grant_matrix must be {}");
+  }
+  if (m.mandate_types.length !== 0) {
+    errors.push("lab mandate_types must be [] in V1");
+  }
+
+  const scoped = m.functions.filter(
+    (f) => f.scope_type !== undefined && f.scope_type !== null,
+  );
+  if (!sameSet(scoped.map((f) => f.function_key), ["cargar", "verificar"])) {
+    errors.push(
+      `lab scoped functions must be exactly cargar+verificar; got ${JSON.stringify(sorted(scoped.map((f) => f.function_key)))}`,
+    );
+  }
+  for (const f of scoped) {
+    if (f.scope_type !== "departamento") {
+      errors.push(
+        `${f.function_key}: scope_type must be "departamento"; got ${f.scope_type}`,
+      );
+    }
+  }
+
+  const configurar = m.functions.find((f) => f.function_key === "configurar");
+  if (!configurar) {
+    errors.push("lab must declare configurar");
+  } else {
+    if (configurar.delegable !== false) {
+      errors.push("configurar must be delegable: false");
+    }
+    if (configurar.scope_type !== undefined && configurar.scope_type !== null) {
+      errors.push("configurar must be unscoped");
+    }
+  }
+
+  const MATRIZ = {
+    admision: ["ver", "admitir", "muestras", "entregar"],
+    carga: ["ver", "cargar"],
+    verificacion: ["ver", "verificar"],
+    configuracion: ["ver", "configurar"],
+  };
+  const presets = m.permission_presets ?? [];
+  if (!sameSet(presets.map((p) => p.preset_key), Object.keys(MATRIZ))) {
+    errors.push(
+      `lab presets must be exactly ${JSON.stringify(Object.keys(MATRIZ))}; got ${JSON.stringify(sorted(presets.map((p) => p.preset_key)))}`,
+    );
+  }
+  for (const p of presets) {
+    const expected = MATRIZ[p.preset_key];
+    if (expected && !sameSet(p.functions, expected)) {
+      errors.push(
+        `lab preset ${p.preset_key} must be ${JSON.stringify(expected)}; got ${JSON.stringify(sorted(p.functions))}`,
       );
     }
   }
@@ -184,6 +351,28 @@ console.log("Role C7 catalog:", rolesOk, ROLE_KEYS, PRIVILEGED_ROLE_KEYS);
 const manifestErrors = verifyCompraManifest(COMPRA_MANIFEST);
 console.log("compra manifest checks:", manifestErrors.length === 0 ? "ok" : manifestErrors);
 
+const sharedManifestErrors = MANIFESTS.flatMap(verifyManifestShared);
+console.log(
+  "shared manifest guards:",
+  sharedManifestErrors.length === 0 ? "ok" : sharedManifestErrors,
+);
+
+const labErrors = verifyLabManifest(LAB_MANIFEST);
+console.log("lab manifest checks:", labErrors.length === 0 ? "ok" : labErrors);
+
+const labLookupOk =
+  manifestByModuleKey("lab") === LAB_MANIFEST &&
+  manifestByModuleKey("compra") === COMPRA_MANIFEST &&
+  MANIFESTS.length === 2;
+console.log("manifestByModuleKey lab/compra:", labLookupOk);
+
+// Guard firmado 4, tripwire ejecutable: sin enum global de scope types — a
+// propósito. Si algún día aparece "ScopeType" en data/enums.json, el DoD
+// grita en vez de aceptarlo en silencio.
+const enumsRaw = JSON.parse(readFileSync(join("data", "enums.json"), "utf8"));
+const noScopeTypeEnum = !Object.hasOwn(enumsRaw, "ScopeType");
+console.log("no global ScopeType enum:", noScopeTypeEnum);
+
 const grantEvents = [
   "module_grant.created",
   "module_grant.role_changed",
@@ -206,6 +395,10 @@ const pass =
   METERED_OPERATIONS.length === expectedMetered &&
   rolesOk &&
   manifestErrors.length === 0 &&
+  sharedManifestErrors.length === 0 &&
+  labErrors.length === 0 &&
+  labLookupOk &&
+  noScopeTypeEnum &&
   grantEventsOk;
 
 console.log(pass ? "\nDoD CHECK: PASS" : "\nDoD CHECK: FAIL");
