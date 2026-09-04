@@ -22,8 +22,9 @@
     "generate:schema": "node scripts/generate-schema.mjs",
     "prebuild": "node scripts/generate-schema.mjs",
     "build": "tsc",
-    "verify": "npm run build && node scripts/verify-v0.mjs",
-    "prepublishOnly": "npm run build"
+    "verify": "npm run build && node scripts/verify-v0.mjs && npm run verify:superficie",
+    "prepublishOnly": "npm run build",
+    "verify:superficie": "tsc --noEmit --module nodenext --moduleResolution nodenext --target es2022 --strict --allowImportingTsExtensions false scripts/verify-superficie.mts && node --experimental-strip-types scripts/verify-superficie.mts"
   },
   "engines": {
     "node": ">=18"
