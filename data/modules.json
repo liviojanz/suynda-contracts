@@ -5,7 +5,9 @@
     "nivel": null,
     "nombre_es": "Plataforma",
     "descripcion_es": "Identidad, tenants, créditos y oficina de eventos",
-    "activo": true
+    "activo": true,
+    "subdomain": null,
+    "kind": null
   },
   {
     "key": "padron",
@@ -13,7 +15,9 @@
     "nivel": null,
     "nombre_es": "Datos maestros",
     "descripcion_es": "Partes, catálogo, sucursales y tablas oficiales",
-    "activo": true
+    "activo": true,
+    "subdomain": null,
+    "kind": null
   },
   {
     "key": "factura",
@@ -21,7 +25,9 @@
     "nivel": 2,
     "nombre_es": "Factura",
     "descripcion_es": "Emisión y documentos fiscales",
-    "activo": true
+    "activo": true,
+    "subdomain": null,
+    "kind": "horizontal"
   },
   {
     "key": "deposito",
@@ -29,7 +35,9 @@
     "nivel": 2,
     "nombre_es": "Depósito",
     "descripcion_es": "Stock e inventario",
-    "activo": true
+    "activo": true,
+    "subdomain": null,
+    "kind": "horizontal"
   },
   {
     "key": "nucleo",
@@ -37,7 +45,9 @@
     "nivel": 2,
     "nombre_es": "Núcleo",
     "descripcion_es": "Contabilidad y cierre",
-    "activo": true
+    "activo": true,
+    "subdomain": null,
+    "kind": "horizontal"
   },
   {
     "key": "compra",
@@ -45,7 +55,9 @@
     "nivel": 2,
     "nombre_es": "Compra",
     "descripcion_es": "Compras y conciliación",
-    "activo": true
+    "activo": true,
+    "subdomain": "compra",
+    "kind": "horizontal"
   },
   {
     "key": "talento",
@@ -53,7 +65,9 @@
     "nivel": 2,
     "nombre_es": "Talento",
     "descripcion_es": "Personas y nómina",
-    "activo": true
+    "activo": true,
+    "subdomain": null,
+    "kind": "horizontal"
   },
   {
     "key": "visibilidad",
@@ -61,7 +75,9 @@
     "nivel": 2,
     "nombre_es": "Visibilidad",
     "descripcion_es": "Enriquecimiento y presencia",
-    "activo": true
+    "activo": true,
+    "subdomain": null,
+    "kind": "horizontal"
   },
   {
     "key": "conecta",
@@ -69,23 +85,29 @@
     "nivel": 2,
     "nombre_es": "Conecta",
     "descripcion_es": "Mensajería saliente",
-    "activo": true
+    "activo": true,
+    "subdomain": null,
+    "kind": "horizontal"
   },
   {
     "key": "lab",
     "clase": "comercial",
     "nivel": 1,
-    "nombre_es": "Lab",
+    "nombre_es": "Laboratorio",
     "descripcion_es": "Laboratorio clínico",
-    "activo": true
+    "activo": true,
+    "subdomain": "lab",
+    "kind": "vertical"
   },
   {
     "key": "vet",
     "clase": "comercial",
     "nivel": 1,
-    "nombre_es": "Vet",
+    "nombre_es": "Veterinaria",
     "descripcion_es": "Veterinaria",
-    "activo": true
+    "activo": true,
+    "subdomain": null,
+    "kind": "vertical"
   },
   {
     "key": "taller",
@@ -93,23 +115,29 @@
     "nivel": 1,
     "nombre_es": "Taller",
     "descripcion_es": "Taller y servicio técnico",
-    "activo": true
+    "activo": true,
+    "subdomain": null,
+    "kind": "vertical"
   },
   {
     "key": "milk",
     "clase": "comercial",
     "nivel": 1,
-    "nombre_es": "Milk",
+    "nombre_es": "Tambo",
     "descripcion_es": "Cadena láctea",
-    "activo": true
+    "activo": true,
+    "subdomain": null,
+    "kind": "vertical"
   },
   {
     "key": "farm",
     "clase": "comercial",
     "nivel": 1,
-    "nombre_es": "Farm",
+    "nombre_es": "Agro",
     "descripcion_es": "Campo y producción",
-    "activo": true
+    "activo": true,
+    "subdomain": null,
+    "kind": "vertical"
   },
   {
     "key": "comercio",
@@ -117,6 +145,8 @@
     "nivel": 1,
     "nombre_es": "Comercio",
     "descripcion_es": "Comercio general",
-    "activo": true
+    "activo": true,
+    "subdomain": null,
+    "kind": "vertical"
   }
 ]

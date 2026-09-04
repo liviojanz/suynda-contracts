@@ -292,6 +292,38 @@ const ok2 = validateEnvelope(bad);
 console.log("valid envelope:", ok1);
 console.log("unknown field rejected:", ok2.ok === false, ok2.errors);
 console.log("modules:", MODULES.length, "keys:", MODULE_KEYS.length);
+
+// El campo tiene que ESTAR en cada entrada, y puede valer null. La diferencia
+// importa: `null` es "este modulo todavia no tiene destino" —una declaracion—,
+// y el campo ausente es un olvido que llegaria al riel como un hueco. Foundation
+// compone la URL con este dato, asi que un modulo nuevo sin el campo saldria
+// del catalogo sin destino y sin que nadie se entere.
+const sinSubdominio = MODULES.filter((m) => !("subdomain" in m)).map((m) => m.key);
+const subdominioMalTipado = MODULES.filter(
+  (m) => "subdomain" in m && m.subdomain !== null && typeof m.subdomain !== "string",
+).map((m) => m.key);
+console.log(
+  "subdomain declarado en todos:",
+  sinSubdominio.length === 0,
+  sinSubdominio.length ? `FALTA EN: ${sinSubdominio.join(", ")}` : "",
+);
+// `kind` es la OTRA pregunta: no si el modulo se contrata, sino que clase de
+// negocio resuelve. Un comercial sin `kind` no sabria donde va en el riel —el
+// orden es casita, vertical(es), horizontales— y un plataforma CON `kind`
+// estaria afirmando algo falso: no es ni una cosa ni la otra.
+const KINDS = ["vertical", "horizontal"];
+const kindMal = MODULES.filter((m) =>
+  m.clase === "comercial" ? !KINDS.includes(m.kind) : m.kind !== null,
+).map((m) => `${m.key}=${JSON.stringify(m.kind)}`);
+console.log(
+  "kind correcto en todos:",
+  kindMal.length === 0,
+  kindMal.length ? `MAL EN: ${kindMal.join(", ")}` : "",
+);
+
+if (subdominioMalTipado.length) {
+  console.log("subdomain mal tipado en:", subdominioMalTipado.join(", "));
+}
 console.log(
   "events:",
   EVENTS.length,
@@ -393,6 +425,9 @@ const pass =
   ok2.ok === false &&
   MODULES.length === 15 &&
   MODULE_KEYS.length === 15 &&
+  sinSubdominio.length === 0 &&
+  subdominioMalTipado.length === 0 &&
+  kindMal.length === 0 &&
   EVENTS.length === expectedEvents.length &&
   missing.length === 0 &&
   extra.length === 0 &&
