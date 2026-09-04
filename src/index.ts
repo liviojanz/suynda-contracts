@@ -34,6 +34,7 @@ export {
   MODULES,
   moduleByKey,
   type ModuleSeed,
+  type ModuleKind,
 } from "./modules.js";
 
 export {
