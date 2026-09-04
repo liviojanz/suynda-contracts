@@ -7,7 +7,8 @@
     "descripcion_es": "Identidad, tenants, créditos y oficina de eventos",
     "activo": true,
     "subdomain": null,
-    "kind": null
+    "kind": null,
+    "orden": null
   },
   {
     "key": "padron",
@@ -17,7 +18,8 @@
     "descripcion_es": "Partes, catálogo, sucursales y tablas oficiales",
     "activo": true,
     "subdomain": null,
-    "kind": null
+    "kind": null,
+    "orden": null
   },
   {
     "key": "factura",
@@ -27,7 +29,8 @@
     "descripcion_es": "Emisión y documentos fiscales",
     "activo": true,
     "subdomain": null,
-    "kind": "horizontal"
+    "kind": "horizontal",
+    "orden": 30
   },
   {
     "key": "deposito",
@@ -37,7 +40,8 @@
     "descripcion_es": "Stock e inventario",
     "activo": true,
     "subdomain": null,
-    "kind": "horizontal"
+    "kind": "horizontal",
+    "orden": 20
   },
   {
     "key": "nucleo",
@@ -47,7 +51,8 @@
     "descripcion_es": "Contabilidad y cierre",
     "activo": true,
     "subdomain": null,
-    "kind": "horizontal"
+    "kind": "horizontal",
+    "orden": 40
   },
   {
     "key": "compra",
@@ -57,7 +62,8 @@
     "descripcion_es": "Compras y conciliación",
     "activo": true,
     "subdomain": "compra",
-    "kind": "horizontal"
+    "kind": "horizontal",
+    "orden": 10
   },
   {
     "key": "talento",
@@ -67,7 +73,8 @@
     "descripcion_es": "Personas y nómina",
     "activo": true,
     "subdomain": null,
-    "kind": "horizontal"
+    "kind": "horizontal",
+    "orden": 50
   },
   {
     "key": "visibilidad",
@@ -77,7 +84,8 @@
     "descripcion_es": "Enriquecimiento y presencia",
     "activo": true,
     "subdomain": null,
-    "kind": "horizontal"
+    "kind": "horizontal",
+    "orden": 70
   },
   {
     "key": "conecta",
@@ -87,7 +95,8 @@
     "descripcion_es": "Mensajería saliente",
     "activo": true,
     "subdomain": null,
-    "kind": "horizontal"
+    "kind": "horizontal",
+    "orden": 60
   },
   {
     "key": "lab",
@@ -97,7 +106,8 @@
     "descripcion_es": "Laboratorio clínico",
     "activo": true,
     "subdomain": "lab",
-    "kind": "vertical"
+    "kind": "vertical",
+    "orden": 10
   },
   {
     "key": "vet",
@@ -107,7 +117,8 @@
     "descripcion_es": "Veterinaria",
     "activo": true,
     "subdomain": null,
-    "kind": "vertical"
+    "kind": "vertical",
+    "orden": 20
   },
   {
     "key": "taller",
@@ -117,7 +128,8 @@
     "descripcion_es": "Taller y servicio técnico",
     "activo": true,
     "subdomain": null,
-    "kind": "vertical"
+    "kind": "vertical",
+    "orden": 30
   },
   {
     "key": "milk",
@@ -127,7 +139,8 @@
     "descripcion_es": "Cadena láctea",
     "activo": true,
     "subdomain": null,
-    "kind": "vertical"
+    "kind": "vertical",
+    "orden": 40
   },
   {
     "key": "farm",
@@ -137,7 +150,8 @@
     "descripcion_es": "Campo y producción",
     "activo": true,
     "subdomain": null,
-    "kind": "vertical"
+    "kind": "vertical",
+    "orden": 50
   },
   {
     "key": "comercio",
@@ -147,6 +161,7 @@
     "descripcion_es": "Comercio general",
     "activo": true,
     "subdomain": null,
-    "kind": "vertical"
+    "kind": "vertical",
+    "orden": 60
   }
 ]

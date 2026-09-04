@@ -33,6 +33,14 @@ las máquinas; el rótulo es para la gente, y no tienen por qué parecerse.
 **Lo hace cumplir:** nada automático. Es revisión humana, y por eso está
 escrito acá.
 
+> **Un caso registrado, porque enseña.** Al armar el orden de los horizontales,
+> el fundador escribió el ciclo como *«compra, deposito, **venta**, nucleo»* —
+> pero el módulo se llama **Factura**. El rótulo nombra **el papel** y él lo
+> pensó por **el acto**. Se decidió **conservar Factura**, y la razón es local:
+> en Paraguay el papel ES el producto — la factura electrónica, SIFEN. Queda
+> anotado para que nadie lo «corrija» más adelante creyendo que fue un
+> descuido.
+
 ---
 
 ## 3 · La clase de negocio — `kind`
@@ -84,21 +92,83 @@ declaración, ausente es un olvido.
 
 ---
 
+## 4-bis · El orden — `orden`
+
+Un entero, **numerado de diez en diez**. Único **dentro de su `kind`**:
+verticales y horizontales son dos listas distintas y las dos arrancan en 10.
+
+### Los horizontales tienen tres bloques, y no son siete ítems sueltos
+
+```
+compra → deposito → factura → nucleo     el ciclo: entra · se guarda · sale · cierra
+talento                                   la gente, que es otro eje
+conecta → visibilidad                     lo que habla hacia afuera
+```
+
+Los primeros cuatro son **una cadena de causa**: lo que se compra se deposita,
+lo que se deposita se vende, y las tres cosas terminan en contabilidad.
+`talento` queda solo porque no pertenece a esa cadena ni a la de afuera. Los
+dos últimos son los únicos que le hablan a alguien fuera de la organización.
+
+> **EL MÓDULO NUEVO SE UBICA EN SU BLOQUE, NO AL FINAL.** Si nace algo del
+> ciclo del negocio, entra entre `nucleo` y `talento` —no después de
+> `visibilidad`—. Un orden que se explica deja de explicarse el día que alguien
+> agrega al final por comodidad. Los huecos de diez existen justamente para
+> que ubicarlo bien no cueste nada.
+
+### Los verticales llevan orden, pero ese orden NO afirma prioridad
+
+**Ningún vertical va antes que otro por razón de negocio** — en el riel casi
+siempre hay uno solo, y decidir que Lab «va antes» que Vet sería inventar una
+jerarquía que no existe.
+
+Pero donde se los lista juntos —el armador de alta, el marketing— hace falta
+**alguna** secuencia estable, y la landing ya publica una desde julio:
+`lab · vet · taller · milk · farm · comercio`. Se hereda ésa.
+
+**Es un desempate mecánico heredado, no una decisión nueva.** La casa ya
+decidió; no se vuelve a decidir.
+
+### Por qué vive acá y no en cada repo
+
+Si cada consumidor ordena por su cuenta, el hub ordena de una forma,
+Visibilidad de otra y Lab de una tercera — la misma deriva que el ícono y el
+subdominio vinieron a cerrar. **La plataforma dice QUÉ se muestra y en qué
+secuencia; quien pinta decide CÓMO** — riel vertical, barra inferior, franja.
+
+**Lo hace cumplir:** guard en `verify-v0.mjs`, presencia **y unicidad por
+`kind`**. El duplicado se chequea porque no rompe nada visible: deja dos
+módulos empatados y el desempate lo resuelve el motor de base como quiera —
+o sea distinto entre consultas, y el riel se mueve solo entre visitas.
+
+---
+
 ## 5 · El ícono — en `suynda-ui`, no acá
 
-Un glifo **24×24, de línea, en `currentColor`**, nombrado por la `key`, más su
-**marco**: bloque si es vertical, pieza de puzzle si es horizontal.
+Una **silueta maciza**, nombrada por la `key`, pintada por máscara sobre
+`currentColor`. En el riel va **pelada, sin marco**: la caja es `B.2-27` y
+meterle otro adentro sería un marco dentro de un marco.
+
+**Y el origen depende del `kind`:**
+
+- **Vertical** → el arte aprobado de `4 Brand ID/`, **extraído**, en PNG.
+  Motivo separado del arco por componentes conectados. **No se redibuja ni se
+  retoca:** si el arte cambia, se vuelve a extraer. Un retoque es un redibujo.
+- **Horizontal** → un SVG dibujado para el riel, elegido **por silueta**: en
+  una columna que se mira todos los días el ojo busca forma, no lee.
 
 Vive en el paquete porque **el mismo juego viste el riel, la landing y el
 marketing**: un ícono de módulo es identidad de marca, no adorno de una
 pantalla. Y por eso su firma es **viendo**, no leyendo.
 
-**El faltante NO se degrada en silencio.** Sin dibujo, B.2-27 muestra un
-**placeholder visiblemente roto** —caja punteada con `?`—. Un genérico mudo es
-el bug que esto viene a matar: hoy, en el riel de Visibilidad, Compra y Talento
-son cuadraditos idénticos.
+**El faltante NO se degrada en silencio.** Sin dibujo se muestra
+`.glifo--sin-dibujo`: caja punteada con `?`. Un genérico mudo es el bug que
+esto viene a matar — hoy el hub cablea dos emoji con `?? '▦'` y once módulos
+comparten el mismo cuadradito.
 
-**Lo hace cumplir:** test en `suynda-ui` — **toda key comercial tiene dibujo**.
+**Lo hace cumplir:** `tests/iconos.test.ts` en `suynda-ui`, contra este mismo
+manifiesto — toda key comercial tiene dibujo, y **ningún vertical puede
+aparecer como SVG**: si aparece, alguien lo redibujó.
 
 ---
 
@@ -121,5 +191,6 @@ tabla y falla si alguien editó la fila por afuera.
 | `clase` | `data/modules.json` | `ModuleClass` |
 | `kind` | `data/modules.json` | guard bidireccional en `verify-v0.mjs` |
 | `subdomain` | `data/modules.json` | guard de presencia en `verify-v0.mjs` |
+| `orden` | `data/modules.json` | guard de presencia y unicidad por `kind` |
 | ícono | `suynda-ui`, por `key` | test «toda key comercial tiene dibujo» |
 | fila en `modules` | siembra desde `MODULES` | `anti-resurreccion.pgtest` |

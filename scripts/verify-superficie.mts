@@ -49,6 +49,7 @@ const camposDelTipo: Array<keyof ModuleSeed> = [
   "activo",
   "subdomain",
   "kind",
+  "orden",
 ];
 
 // ── Los VALORES ───────────────────────────────────────────────────────────

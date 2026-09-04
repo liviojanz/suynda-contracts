@@ -321,6 +321,30 @@ console.log(
   kindMal.length ? `MAL EN: ${kindMal.join(", ")}` : "",
 );
 
+// `orden` — presencia Y UNICIDAD dentro de cada `kind`. Un duplicado no
+// rompe nada visible: deja dos modulos empatados y el desempate lo resuelve
+// el motor de base como quiera, o sea distinto en cada consulta. Eso es peor
+// que un error ruidoso, porque el riel se mueve solo entre visitas.
+const ordenMal = MODULES.filter((m) =>
+  m.clase === "comercial"
+    ? typeof m.orden !== "number" || !Number.isInteger(m.orden)
+    : m.orden !== null,
+).map((m) => `${m.key}=${JSON.stringify(m.orden)}`);
+const duplicados = [];
+for (const kind of ["vertical", "horizontal"]) {
+  const vistos = new Map();
+  for (const m of MODULES.filter((x) => x.kind === kind)) {
+    if (vistos.has(m.orden)) duplicados.push(`${kind} ${m.orden}: ${vistos.get(m.orden)} y ${m.key}`);
+    vistos.set(m.orden, m.key);
+  }
+}
+console.log(
+  "orden correcto y unico por kind:",
+  ordenMal.length === 0 && duplicados.length === 0,
+  ordenMal.length ? `MAL EN: ${ordenMal.join(", ")}` : "",
+  duplicados.length ? `DUPLICADO: ${duplicados.join(" · ")}` : "",
+);
+
 if (subdominioMalTipado.length) {
   console.log("subdomain mal tipado en:", subdominioMalTipado.join(", "));
 }
@@ -428,6 +452,8 @@ const pass =
   sinSubdominio.length === 0 &&
   subdominioMalTipado.length === 0 &&
   kindMal.length === 0 &&
+  ordenMal.length === 0 &&
+  duplicados.length === 0 &&
   EVENTS.length === expectedEvents.length &&
   missing.length === 0 &&
   extra.length === 0 &&

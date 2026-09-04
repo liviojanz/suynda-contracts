@@ -55,6 +55,24 @@ export interface ModuleSeed {
    * comercial con valor, plataforma sin el.
    */
   kind: ModuleKind | null;
+  /**
+   * La secuencia canonica dentro de su `kind`. `null` para `plataforma`, que
+   * no aparece en ningun listado.
+   *
+   * NUMERADO DE DIEZ EN DIEZ a proposito: el modulo dieciseis se ubica en su
+   * bloque sin renumerar a los otros quince. Un orden correlativo obliga a
+   * tocar todo el archivo cada vez que nace algo.
+   *
+   * VIVE ACA Y NO EN CADA REPO por la misma razon que el icono y el
+   * subdominio: si cada consumidor ordena por su cuenta, el hub ordena de una
+   * forma, Visibilidad de otra y Lab de una tercera. El QUE se muestra lo dice
+   * la plataforma; el COMO —riel vertical, barra inferior, franja— lo decide
+   * quien pinta.
+   *
+   * Unico DENTRO de su `kind`, no entre todos: verticales y horizontales son
+   * dos listas distintas y las dos arrancan en 10.
+   */
+  orden: number | null;
 }
 
 export const MODULES = modulesData as readonly ModuleSeed[];
