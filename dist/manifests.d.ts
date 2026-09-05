@@ -76,6 +76,13 @@ export interface ModuleManifest {
 }
 export declare const COMPRA_MANIFEST: ModuleManifest;
 export declare const LAB_MANIFEST: ModuleManifest;
+/**
+ * Depósito (RC v0.11.0) — patrón Lab: roles [], acceso 100 % por tildes,
+ * scope_type "almacen" en operar/contar (sin enum global de scope, a
+ * propósito). Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN. Sus firmas las
+ * sostiene verifyDepositoManifest en scripts/verify-v0.mjs.
+ */
+export declare const DEPOSITO_MANIFEST: ModuleManifest;
 export declare const MANIFESTS: readonly ModuleManifest[];
 export declare function manifestByModuleKey(moduleKey: string): ModuleManifest | undefined;
 //# sourceMappingURL=manifests.d.ts.map

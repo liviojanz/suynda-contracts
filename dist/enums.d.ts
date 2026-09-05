@@ -35,6 +35,27 @@ export type PlanKey = (typeof PLAN_KEYS)[number];
 export declare const ROLE_KEYS: string[];
 export type Role = (typeof ROLE_KEYS)[number];
 export declare const PRIVILEGED_ROLE_KEYS: string[];
+export declare const ITEM_TYPES: string[];
+export type ItemType = (typeof ITEM_TYPES)[number];
+export declare const INVENTORY_OPERATION_TYPES: string[];
+export type InventoryOperationType = (typeof INVENTORY_OPERATION_TYPES)[number];
+export declare const COST_STATES: string[];
+export type CostState = (typeof COST_STATES)[number];
+export declare const PROVISIONAL_BASES: string[];
+export type ProvisionalBasis = (typeof PROVISIONAL_BASES)[number];
+export declare const COST_FORMULAS: string[];
+export type CostFormula = (typeof COST_FORMULAS)[number];
+export declare const TRACKING_CLASSES: string[];
+export type TrackingClass = (typeof TRACKING_CLASSES)[number];
+export declare const QUANTITY_BRANCHES: string[];
+export type QuantityBranch = (typeof QUANTITY_BRANCHES)[number];
+export declare const TRUE_UP_MODES: string[];
+export type TrueUpMode = (typeof TRUE_UP_MODES)[number];
+/** La NATURALEZA del efecto. REVERSAL no es kind: vive en ConsequenceRole. */
+export declare const COST_EFFECT_KINDS: string[];
+export type CostEffectKind = (typeof COST_EFFECT_KINDS)[number];
+export declare const CONSEQUENCE_ROLES: string[];
+export type ConsequenceRole = (typeof CONSEQUENCE_ROLES)[number];
 export declare const ENUMS: {
     readonly ModuleKey: string[];
     readonly ModuleClass: string[];
@@ -46,5 +67,15 @@ export declare const ENUMS: {
     readonly LedgerTipo: string[];
     readonly PlanKey: string[];
     readonly Role: string[];
+    readonly ItemType: string[];
+    readonly InventoryOperationType: string[];
+    readonly CostState: string[];
+    readonly ProvisionalBasis: string[];
+    readonly CostFormula: string[];
+    readonly TrackingClass: string[];
+    readonly QuantityBranch: string[];
+    readonly TrueUpMode: string[];
+    readonly CostEffectKind: string[];
+    readonly ConsequenceRole: string[];
 };
 //# sourceMappingURL=enums.d.ts.map

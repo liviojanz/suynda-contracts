@@ -1,7 +1,8 @@
 {
   "_status": "PROPUESTO",
   "_notes": [
-    "Starter set — se espera crecimiento. message_es en es-PY llano, sin siglas."
+    "Starter set — se espera crecimiento. message_es en es-PY llano, sin siglas.",
+    "DEPOSITO_*: Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN · C-3, C-4, DEP-06, DEP-20/21, DEP-25/26, DEP-28, DEP-46; Charter criterio 4 y Enablement criterio 3 para los de admisión de ítem. Starter set."
   ],
   "errors": [
     {
@@ -193,6 +194,61 @@
       "code": "TENANT_SLUG_IMMUTABLE",
       "http": 409,
       "message_es": "El slug no se puede cambiar: ya hay nombres de usuario compuestos con él"
+    },
+    {
+      "code": "DEPOSITO_OPERATION_NOT_FOUND",
+      "http": 404,
+      "message_es": "No se encontró la operación de inventario indicada"
+    },
+    {
+      "code": "DEPOSITO_LOCKED_PERIOD",
+      "http": 409,
+      "message_es": "La fecha del hecho cae en un período ya cerrado; ahí no se puede registrar un hecho nuevo"
+    },
+    {
+      "code": "DEPOSITO_ANTECEDENT_REQUIRED",
+      "http": 422,
+      "message_es": "Para ajustar o resolver algo de un período cerrado hace falta un antecedente registrado antes del cierre"
+    },
+    {
+      "code": "DEPOSITO_LOCK_DATE_NOT_MONOTONIC",
+      "http": 422,
+      "message_es": "La fecha de cierre sólo puede avanzar"
+    },
+    {
+      "code": "DEPOSITO_INSUFFICIENT_STOCK",
+      "http": 409,
+      "message_es": "No hay existencia disponible suficiente y la política de la organización no admite faltantes"
+    },
+    {
+      "code": "DEPOSITO_CROSS_GROUP_TRANSFER",
+      "http": 422,
+      "message_es": "Una transferencia sólo puede hacerse entre almacenes del mismo contribuyente"
+    },
+    {
+      "code": "DEPOSITO_ITEM_NOT_INVENTORIABLE",
+      "http": 422,
+      "message_es": "Ese ítem es un servicio y no puede tener existencia"
+    },
+    {
+      "code": "DEPOSITO_ITEM_BASE_UNIT_MISSING",
+      "http": 422,
+      "message_es": "Ese ítem no tiene unidad base definida en Padrón y no se puede mover"
+    },
+    {
+      "code": "DEPOSITO_LOT_BLOCKED",
+      "http": 409,
+      "message_es": "El lote está bloqueado y no puede entregarse sin una excepción autorizada"
+    },
+    {
+      "code": "DEPOSITO_COST_NOT_ALLOWED",
+      "http": 422,
+      "message_es": "El costo de una salida lo determina Depósito; no se puede indicar desde afuera"
+    },
+    {
+      "code": "DEPOSITO_REVERSAL_TARGET_INVALID",
+      "http": 422,
+      "message_es": "La reversa tiene que apuntar a una operación existente del mismo ítem y almacén"
     }
   ]
 }

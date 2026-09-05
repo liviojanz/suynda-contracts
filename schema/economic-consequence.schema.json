@@ -1,0 +1,343 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://suynda.com/schemas/economic-consequence.schema.json",
+  "title": "Suynda Depósito — Economic Consequence (A-4 pull)",
+  "description": "La unidad que Núcleo PULLEA a Depósito (A-4, DEP-38). Forma documentada que ambos lados compilan idéntica — contracts gobierna el significado; el transporte vive en el OpenAPI de Depósito. Cerrada (additionalProperties: false). Los enums de este schema se GENERAN desde data/enums.json y data/modules.json por scripts/generate-schema.mjs — no editar a mano. Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN.",
+  "$ref": "#/$defs/economicConsequence",
+  "$defs": {
+    "decimalString": {
+      "type": "string",
+      "pattern": "^-?[0-9]+(\\.[0-9]+)?$",
+      "description": "Decimal como string, con signo. Jamás number (C-12)."
+    },
+    "isoDateTime": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "causalIdentity": {
+      "type": "object",
+      "description": "C-10 / DEP-30 — nunca nula.",
+      "additionalProperties": false,
+      "required": [
+        "origen_module",
+        "documento_causante"
+      ],
+      "properties": {
+        "origen_module": {
+          "type": "string",
+          "description": "ModuleKey — GENERATED from data/modules.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "foundation",
+            "padron",
+            "factura",
+            "deposito",
+            "nucleo",
+            "compra",
+            "talento",
+            "visibilidad",
+            "conecta",
+            "lab",
+            "vet",
+            "taller",
+            "milk",
+            "farm",
+            "comercio"
+          ]
+        },
+        "documento_causante": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "itemReference": {
+      "type": "object",
+      "description": "Referencia tenant-scoped al ítem de Padrón que realmente se movió (schema/reference.schema.json itemReference).",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "item_nombre_cache",
+        "item_cache_at",
+        "item_entity_version"
+      ],
+      "properties": {
+        "item_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "item_nombre_cache": {
+          "type": "string"
+        },
+        "item_cache_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "item_entity_version": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "inventoryMovement": {
+      "type": "object",
+      "description": "Un movimiento físico (DEP-01/02, C-2). El almacén es ubicación, jamás pool (DEP-11).",
+      "additionalProperties": false,
+      "required": [
+        "movement_id",
+        "item",
+        "tenant_id",
+        "almacen_id",
+        "lot_id",
+        "branch",
+        "unallocated",
+        "delta",
+        "effective_at",
+        "recorded_at"
+      ],
+      "properties": {
+        "movement_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "item": {
+          "$ref": "#/$defs/itemReference"
+        },
+        "tenant_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "almacen_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "lot_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "branch": {
+          "type": "string",
+          "description": "QuantityBranch — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "AVAILABLE",
+            "BLOCKED",
+            "SHORTFALL"
+          ]
+        },
+        "unallocated": {
+          "type": "boolean"
+        },
+        "delta": {
+          "$ref": "#/$defs/decimalString"
+        },
+        "effective_at": {
+          "$ref": "#/$defs/isoDateTime"
+        },
+        "recorded_at": {
+          "$ref": "#/$defs/isoDateTime"
+        }
+      }
+    },
+    "costEffect": {
+      "type": "object",
+      "description": "Un efecto de costo (C-6). kind es la naturaleza y se preserva bajo reversa/re-exposición; el eje costo/valor se deriva de kind (DEP-36).",
+      "additionalProperties": false,
+      "required": [
+        "cost_effect_id",
+        "kind",
+        "grupo_id",
+        "pool_ref",
+        "cost_state",
+        "provisional_basis",
+        "true_up_mode",
+        "amount",
+        "currency",
+        "effective_at",
+        "recorded_at",
+        "target_effective_as_of",
+        "resolves_cost_effect_id"
+      ],
+      "properties": {
+        "cost_effect_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "type": "string",
+          "description": "CostEffectKind — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "RECEIPT_COST",
+            "ISSUE_COST",
+            "TRUE_UP",
+            "SHORTFALL_RESOLUTION",
+            "FORMULA_CHANGE",
+            "IMPAIRMENT"
+          ]
+        },
+        "grupo_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "pool_ref": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Opaco, propiedad de Depósito (DEP-10)."
+        },
+        "cost_state": {
+          "type": "string",
+          "description": "CostState — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "FINAL",
+            "PROVISIONAL",
+            "UNRESOLVED"
+          ]
+        },
+        "provisional_basis": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "ProvisionalBasis | null — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "PENDIENTE_FLETE",
+            "PENDIENTE_ARANCEL",
+            "PENDIENTE_FACTURA",
+            "VALOR_ADUANA",
+            "SIN_BASE",
+            null
+          ]
+        },
+        "true_up_mode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "TrueUpMode | null — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "RETRO",
+            "PROSPECTIVE",
+            null
+          ]
+        },
+        "amount": {
+          "$ref": "#/$defs/decimalString"
+        },
+        "currency": {
+          "type": "string",
+          "enum": [
+            "PYG"
+          ],
+          "description": "DepositCurrency — V1: PYG. Tipo local, no enum global."
+        },
+        "effective_at": {
+          "$ref": "#/$defs/isoDateTime"
+        },
+        "recorded_at": {
+          "$ref": "#/$defs/isoDateTime"
+        },
+        "target_effective_as_of": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "format": "date-time"
+        },
+        "resolves_cost_effect_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "economicConsequence": {
+      "type": "object",
+      "description": "La unidad pullable. Núcleo consume operaciones económicamente relevantes, nunca renglones de Kardex (C-6).",
+      "additionalProperties": false,
+      "required": [
+        "operation_id",
+        "operation_type",
+        "version",
+        "role",
+        "cause",
+        "tenant_id",
+        "grupo_id",
+        "effective_at",
+        "recorded_at",
+        "movements",
+        "cost_effects",
+        "reverses_operation_id"
+      ],
+      "properties": {
+        "operation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "operation_type": {
+          "type": "string",
+          "description": "InventoryOperationType — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "OPENING_INVENTORY",
+            "RECEIPT",
+            "ISSUE",
+            "TRANSFER",
+            "COUNT_ADJUSTMENT",
+            "REVERSAL",
+            "WRITE_OFF",
+            "TRUE_UP",
+            "SHORTFALL_RECONCILIATION"
+          ]
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "role": {
+          "type": "string",
+          "description": "ConsequenceRole — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "ORIGINAL",
+            "REVERSAL",
+            "REEXPOSURE"
+          ]
+        },
+        "cause": {
+          "$ref": "#/$defs/causalIdentity"
+        },
+        "tenant_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "grupo_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "effective_at": {
+          "$ref": "#/$defs/isoDateTime"
+        },
+        "recorded_at": {
+          "$ref": "#/$defs/isoDateTime"
+        },
+        "movements": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/inventoryMovement"
+          }
+        },
+        "cost_effects": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/costEffect"
+          }
+        },
+        "reverses_operation_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    }
+  }
+}

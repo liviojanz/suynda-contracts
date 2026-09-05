@@ -5,6 +5,7 @@
 
 import compraManifestData from "../data/manifests/compra.json" with { type: "json" };
 import labManifestData from "../data/manifests/lab.json" with { type: "json" };
+import depositoManifestData from "../data/manifests/deposito.json" with { type: "json" };
 
 export interface ManifestFunction {
   function_key: string;
@@ -87,9 +88,18 @@ export const COMPRA_MANIFEST = compraManifestData as ModuleManifest;
 
 export const LAB_MANIFEST = labManifestData as ModuleManifest;
 
+/**
+ * Depósito (RC v0.11.0) — patrón Lab: roles [], acceso 100 % por tildes,
+ * scope_type "almacen" en operar/contar (sin enum global de scope, a
+ * propósito). Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN. Sus firmas las
+ * sostiene verifyDepositoManifest en scripts/verify-v0.mjs.
+ */
+export const DEPOSITO_MANIFEST = depositoManifestData as ModuleManifest;
+
 export const MANIFESTS: readonly ModuleManifest[] = [
   COMPRA_MANIFEST,
   LAB_MANIFEST,
+  DEPOSITO_MANIFEST,
 ];
 
 export function manifestByModuleKey(

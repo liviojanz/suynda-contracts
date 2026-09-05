@@ -17,6 +17,16 @@ export {
   PLAN_KEYS,
   ROLE_KEYS,
   PRIVILEGED_ROLE_KEYS,
+  ITEM_TYPES,
+  INVENTORY_OPERATION_TYPES,
+  COST_STATES,
+  PROVISIONAL_BASES,
+  COST_FORMULAS,
+  TRACKING_CLASSES,
+  QUANTITY_BRANCHES,
+  TRUE_UP_MODES,
+  COST_EFFECT_KINDS,
+  CONSEQUENCE_ROLES,
   ENUMS,
   type ModuleKey,
   type ModuleClass,
@@ -28,6 +38,16 @@ export {
   type LedgerTipo,
   type PlanKey,
   type Role,
+  type ItemType,
+  type InventoryOperationType,
+  type CostState,
+  type ProvisionalBasis,
+  type CostFormula,
+  type TrackingClass,
+  type QuantityBranch,
+  type TrueUpMode,
+  type CostEffectKind,
+  type ConsequenceRole,
 } from "./enums.js";
 
 export {
@@ -40,6 +60,7 @@ export {
 export {
   COMPRA_MANIFEST,
   LAB_MANIFEST,
+  DEPOSITO_MANIFEST,
   MANIFESTS,
   manifestByModuleKey,
   type ModuleManifest,
@@ -89,3 +110,16 @@ export {
   type MeteredOperation,
   type MeteredOperationKey,
 } from "./metered-operations.js";
+
+export {
+  type DecimalString,
+  type DepositCurrency,
+  type PoolRef,
+  type IsoDateTime,
+  type CausalIdentity,
+  type InventoryMovementDto,
+  type CostEffectDto,
+  type EconomicConsequence,
+  type ProvocationLine,
+  type InventoryProvocation,
+} from "./deposito.js";

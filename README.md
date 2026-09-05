@@ -16,6 +16,8 @@ Shared structural contracts for the Suynda system. Every repo imports this packa
 | Capabilities | `data/capabilities.json` | availability + initiator (rows proposed) |
 | Error codes | `data/error-codes.json` | Stable namespaced codes (rows proposed) |
 | Metered operations | `data/metered-operations.json` | **keys + descriptions only** — no costs |
+| Module manifests | `data/manifests/*.json` + `src/manifests.ts` | Functions, presets, scopes per module (`compra`, `lab`, `deposito`); Foundation seeds from these |
+| Depósito boundary types | `src/deposito.ts` + `schema/economic-consequence.schema.json` + `schema/inventory-provocation.schema.json` | Shapes crossing the Depósito boundary: what Núcleo **pulls** (A-4) and what a vertical **asks** (C-7). **Meaning lives here; transport lives in Depósito's OpenAPI.** Enums in both schemas are generated from `data/enums.json` |
 
 ## What does **not** live here
 

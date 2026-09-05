@@ -52,5 +52,72 @@
     "_status": "PROPUESTO",
     "_note": "Clasificación propia de compra; contabilidad la mapea a cuenta (D5). Valores a cosechar del classifier de facturas-py antes de congelar — ver §11 #3.",
     "values": []
+  },
+  "ItemType": {
+    "_status": "PROPUESTO",
+    "_note": "Source: Charter Run #4 Rev 2.2 B-1 · PADRON-ENABLEMENT-FOR-DEPOSITO-v1 E2. Tipado canónico del ítem: lo provee Padrón, la regla de admisión (SERVICE no es inventariable) la aplica Depósito. Otros valores sólo con necesidad real demostrada.",
+    "values": ["PRODUCT", "SERVICE"]
+  },
+  "InventoryOperationType": {
+    "_status": "PROPUESTO",
+    "_note": "Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN · C-6, C-7, C-8, DEP-05, DEP-23, DEP-40, E-bis (b). La InventoryOperation es la unidad canónica (C-6). El tipo nombra QUÉ OCURRIÓ físicamente, jamás quién o cómo lo provocó: eso vive en la causa (C-10, DEP-30) — RECEIPT es RECEIPT lo provoque la UI manual, Compra o quien sea; ISSUE es ISSUE lo provoque Lab, Ventas o la UI. Lista V1 = casos mínimos de graduación (opening por plantilla · entrada · transferencia · conteo/ajuste · reversa) + lo que el dominio exige (write-off DEP-40 · true-up DEP-18 · reconciliación de shortfall DEP-23). Avanzar la lock_date NO es una operación (DEP-20/21): es un acto auditado con evento propio. SHORTFALL_RECONCILIATION es tipo, no evento aparte.",
+    "values": [
+      "OPENING_INVENTORY",
+      "RECEIPT",
+      "ISSUE",
+      "TRANSFER",
+      "COUNT_ADJUSTMENT",
+      "REVERSAL",
+      "WRITE_OFF",
+      "TRUE_UP",
+      "SHORTFALL_RECONCILIATION"
+    ]
+  },
+  "CostState": {
+    "_status": "PROPUESTO",
+    "_note": "Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN · C-3, DEP-15, DEP-16. Las entradas declaran FINAL | PROVISIONAL (C-3). UNRESOLVED es estado de un CostEffect sobre una SALIDA sin base de costo, jamás de una entrada (DEP-15) — la restricción es de dominio, el enum sólo nombra.",
+    "values": ["FINAL", "PROVISIONAL", "UNRESOLVED"]
+  },
+  "ProvisionalBasis": {
+    "_status": "PROPUESTO",
+    "_note": "Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN · DEP-17 (enum, jamás texto libre), DEP-16 (SIN_BASE), DEP-43 (VALOR_ADUANA es base PRESCRIPTA por Dec. 3182 art. 26 [NORMA-V], no estimación). Se amplía con nombre, nunca con texto.",
+    "values": ["PENDIENTE_FLETE", "PENDIENTE_ARANCEL", "PENDIENTE_FACTURA", "VALOR_ADUANA", "SIN_BASE"]
+  },
+  "CostFormula": {
+    "_status": "PROPUESTO",
+    "_note": "Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN · DEP-12, DEP-14 (DF-2). UN solo valor a propósito: V1 implementa WEIGHTED_AVERAGE únicamente. El enum existe para que otra fórmula llegue como valor nuevo, no como cambio de significado. LIFO jamás entra (Ley 6380 art. 9 [NORMA-V], A-6).",
+    "values": ["WEIGHTED_AVERAGE"]
+  },
+  "TrackingClass": {
+    "_status": "PROPUESTO",
+    "_note": "Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN · Charter A-1 (política de stock de Depósito, NO atributo de Padrón), DEP-22, DEP-25. Tracking ≠ fórmula de costo (C-5): LOT jamás implica costo específico.",
+    "values": ["NONE", "LOT", "LOT_EXPIRY"]
+  },
+  "QuantityBranch": {
+    "_status": "PROPUESTO",
+    "_note": "Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN · DEP-01/02/03. PHYSICAL_ON_HAND = AVAILABLE + BLOCKED. SHORTFALL no es mercadería. UNALLOCATED no es rama: es marca sobre un movimiento SHORTFALL bajo tracking LOT/LOT_EXPIRY (DEP-22). RESERVED NO entra: recorte E; cuando llegue, particiona AVAILABLE.",
+    "values": ["AVAILABLE", "BLOCKED", "SHORTFALL"]
+  },
+  "TrueUpMode": {
+    "_status": "PROPUESTO",
+    "_note": "Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN · DEP-18. Lo determina la lock_date, no el caller: objetivo abierto → RETRO; objetivo cerrado → PROSPECTIVE con target_effective_as_of (DEP-21).",
+    "values": ["RETRO", "PROSPECTIVE"]
+  },
+  "CostEffectKind": {
+    "_status": "PROPUESTO",
+    "_note": "Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN · C-6, DEP-13, DEP-15, DEP-23, DEP-36. La NATURALEZA económica del efecto — Núcleo la necesita para correlacionar (D-10: ISSUE_COST es el COGS). El eje que afecta se DERIVA del kind: IMPAIRMENT afecta VALOR (DEP-36: costo ≠ valor); todos los demás afectan COSTO. Por eso no hay campo aparte. REVERSAL NO es un kind: una reversa PRESERVA la naturaleza del efecto original (kind = IMPAIRMENT, role = REVERSAL, monto inverso) — si fuera kind, revertir un IMPAIRMENT perdería el eje y rompería DEP-36. La reversa y la re-exposición viven en ConsequenceRole.",
+    "values": [
+      "RECEIPT_COST",
+      "ISSUE_COST",
+      "TRUE_UP",
+      "SHORTFALL_RESOLUTION",
+      "FORMULA_CHANGE",
+      "IMPAIRMENT"
+    ]
+  },
+  "ConsequenceRole": {
+    "_status": "PROPUESTO",
+    "_note": "Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN · DEP-31, DEP-04, C-4. El rol de una consecuencia dentro de su identidad económica: ORIGINAL la primera exposición; REVERSAL la reversa (C-4, referencia a la original, mismo kind, monto inverso); REEXPOSURE la re-exposición versionada tras una revaluación en cascada (D-4) — mismo operation_id, version+1, mismo kind. El rol cambia versión y signo; JAMÁS la naturaleza (CostEffectKind) del efecto.",
+    "values": ["ORIGINAL", "REVERSAL", "REEXPOSURE"]
   }
 }

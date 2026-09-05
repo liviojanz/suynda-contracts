@@ -12,6 +12,7 @@ import {
   PRIVILEGED_ROLE_KEYS,
   COMPRA_MANIFEST,
   LAB_MANIFEST,
+  DEPOSITO_MANIFEST,
   MANIFESTS,
   manifestByModuleKey,
 } from "../dist/index.js";
@@ -263,6 +264,78 @@ function verifyLabManifest(m) {
   return errors;
 }
 
+/**
+ * Las firmas del manifiesto deposito (RC v0.11.0) — que no derritan en silencio.
+ * Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN. Patrón Lab; scope "almacen" en
+ * operar/contar (DEP-11: la custodia es por lugar); aprobar_ajustes separado de
+ * contar (DEP-05, maker/checker); cerrar_periodo solo en su preset (DEP-21).
+ */
+function verifyDepositoManifest(m) {
+  const errors = [];
+  if (m.module_key !== "deposito") {
+    errors.push(`deposito manifest module_key must be deposito; got ${m.module_key}`);
+  }
+  if (m.roles.length !== 0) {
+    errors.push("deposito roles must be [] (patrón Lab: acceso 100% por tildes)");
+  }
+  if (Object.keys(m.role_grant_matrix).length !== 0) {
+    errors.push("deposito role_grant_matrix must be {}");
+  }
+  if (m.mandate_types.length !== 0) {
+    errors.push("deposito mandate_types must be [] in V1");
+  }
+
+  const scoped = m.functions.filter(
+    (f) => f.scope_type !== undefined && f.scope_type !== null,
+  );
+  if (!sameSet(scoped.map((f) => f.function_key), ["operar", "contar"])) {
+    errors.push(
+      `deposito scoped functions must be exactly operar+contar; got ${JSON.stringify(sorted(scoped.map((f) => f.function_key)))}`,
+    );
+  }
+  for (const f of scoped) {
+    if (f.scope_type !== "almacen") {
+      errors.push(`${f.function_key}: scope_type must be "almacen"; got ${f.scope_type}`);
+    }
+  }
+
+  for (const key of ["aprobar_ajustes", "cerrar_periodo", "configurar"]) {
+    const f = m.functions.find((x) => x.function_key === key);
+    if (!f) {
+      errors.push(`deposito must declare ${key}`);
+    } else {
+      if (f.delegable !== false) errors.push(`${key} must be delegable: false`);
+      if (f.scope_type !== undefined && f.scope_type !== null) {
+        errors.push(`${key} must be unscoped`);
+      }
+    }
+  }
+
+  const MATRIZ = {
+    operacion: ["ver", "operar"],
+    inventario: ["ver", "contar"],
+    supervision: ["ver", "aprobar_ajustes", "dar_de_baja"],
+    cierre: ["ver", "cerrar_periodo"],
+    configuracion: ["ver", "configurar"],
+  };
+  const presets = m.permission_presets ?? [];
+  if (!sameSet(presets.map((p) => p.preset_key), Object.keys(MATRIZ))) {
+    errors.push(
+      `deposito presets must be exactly ${JSON.stringify(Object.keys(MATRIZ))}; got ${JSON.stringify(sorted(presets.map((p) => p.preset_key)))}`,
+    );
+  }
+  for (const p of presets) {
+    const expected = MATRIZ[p.preset_key];
+    if (expected && !sameSet(p.functions, expected)) {
+      errors.push(
+        `deposito preset ${p.preset_key} must be ${JSON.stringify(expected)}; got ${JSON.stringify(sorted(p.functions))}`,
+      );
+    }
+  }
+
+  return errors;
+}
+
 function walk(dir) {
   const out = [];
   for (const e of readdirSync(dir, { withFileTypes: true })) {
@@ -422,11 +495,15 @@ console.log(
 const labErrors = verifyLabManifest(LAB_MANIFEST);
 console.log("lab manifest checks:", labErrors.length === 0 ? "ok" : labErrors);
 
+const depositoErrors = verifyDepositoManifest(DEPOSITO_MANIFEST);
+console.log("deposito manifest checks:", depositoErrors.length === 0 ? "ok" : depositoErrors);
+
 const labLookupOk =
   manifestByModuleKey("lab") === LAB_MANIFEST &&
   manifestByModuleKey("compra") === COMPRA_MANIFEST &&
-  MANIFESTS.length === 2;
-console.log("manifestByModuleKey lab/compra:", labLookupOk);
+  manifestByModuleKey("deposito") === DEPOSITO_MANIFEST &&
+  MANIFESTS.length === 3;
+console.log("manifestByModuleKey lab/compra/deposito:", labLookupOk);
 
 // Guard firmado 4, tripwire ejecutable: sin enum global de scope types — a
 // propósito. Si algún día aparece "ScopeType" en data/enums.json, el DoD
@@ -443,6 +520,22 @@ const grantEvents = [
 ];
 const grantEventsOk = grantEvents.every((t) => actualTypes.includes(t));
 console.log("module_grant events present:", grantEventsOk);
+
+// Tripwire D-2 (RC v0.11.0): stock.adjusted / stock.transferred fueron vocabulario
+// anterior al dominio de Depósito (cero consumidores, retirados como BREAKING).
+// La unidad canónica es la InventoryOperation (C-6). Si algún stock.* vuelve al
+// catálogo, el DoD grita en vez de aceptarlo en silencio — mismo espíritu que
+// noScopeTypeEnum y que el anti-resurreccion.pgtest de Foundation.
+const noLegacyStockEvents = !actualTypes.some((t) => t.startsWith("stock."));
+console.log("no legacy stock.* events:", noLegacyStockEvents);
+
+const depositoEvents = [
+  "inventory_operation.posted",
+  "cost_effect.recorded",
+  "lock_date.advanced",
+];
+const depositoEventsOk = depositoEvents.every((t) => actualTypes.includes(t));
+console.log("deposito events present:", depositoEventsOk);
 
 const pass =
   ok1.ok === true &&
@@ -464,9 +557,12 @@ const pass =
   manifestErrors.length === 0 &&
   sharedManifestErrors.length === 0 &&
   labErrors.length === 0 &&
+  depositoErrors.length === 0 &&
   labLookupOk &&
   noScopeTypeEnum &&
-  grantEventsOk;
+  grantEventsOk &&
+  noLegacyStockEvents &&
+  depositoEventsOk;
 
 console.log(pass ? "\nDoD CHECK: PASS" : "\nDoD CHECK: FAIL");
 process.exit(pass ? 0 : 1);

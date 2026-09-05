@@ -1,0 +1,23 @@
+{
+  "module_key": "deposito",
+  "manifest_version": 1,
+  "functions": [
+    { "function_key": "ver", "nombre": "Ver", "descripcion": "Ver existencias, posiciones, movimientos y operaciones de todos los almacenes", "autorizada_por_canal": false, "orden": 1, "delegable": true },
+    { "function_key": "operar", "nombre": "Operar", "descripcion": "Registrar entradas, salidas, reversas e inventario inicial en el almacén asignado. Una transferencia exige este alcance sobre el almacén de origen Y el de destino", "autorizada_por_canal": false, "orden": 2, "delegable": false, "scope_type": "almacen" },
+    { "function_key": "contar", "nombre": "Contar", "descripcion": "Cargar hojas de conteo físico del almacén asignado; cada línea lleva su hora", "autorizada_por_canal": false, "orden": 3, "delegable": false, "scope_type": "almacen" },
+    { "function_key": "aprobar_ajustes", "nombre": "Aprobar ajustes", "descripcion": "Aprobar los ajustes que nacen de un conteo y las operaciones sujetas a autorización", "autorizada_por_canal": false, "orden": 4, "delegable": false },
+    { "function_key": "dar_de_baja", "nombre": "Dar de baja", "descripcion": "Registrar mermas, destrucciones y bajas, con su documentación", "autorizada_por_canal": false, "orden": 5, "delegable": false },
+    { "function_key": "cerrar_periodo", "nombre": "Cerrar período", "descripcion": "Avanzar la fecha de cierre del contribuyente; sólo avanza y queda auditado", "autorizada_por_canal": false, "orden": 6, "delegable": false },
+    { "function_key": "configurar", "nombre": "Configurar", "descripcion": "Almacenes, políticas de stock, clase de tracking por ítem y plantilla de inventario inicial", "autorizada_por_canal": false, "orden": 7, "delegable": false }
+  ],
+  "roles": [],
+  "role_grant_matrix": {},
+  "mandate_types": [],
+  "permission_presets": [
+    { "preset_key": "operacion", "nombre": "Operación", "orden": 1, "functions": ["ver", "operar"] },
+    { "preset_key": "inventario", "nombre": "Inventario", "orden": 2, "functions": ["ver", "contar"] },
+    { "preset_key": "supervision", "nombre": "Supervisión", "orden": 3, "functions": ["ver", "aprobar_ajustes", "dar_de_baja"] },
+    { "preset_key": "cierre", "nombre": "Cierre", "orden": 4, "functions": ["ver", "cerrar_periodo"] },
+    { "preset_key": "configuracion", "nombre": "Configuración", "orden": 5, "functions": ["ver", "configurar"] }
+  ]
+}

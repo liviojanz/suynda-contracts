@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://suynda.com/schemas/inventory-provocation.schema.json",
+  "title": "Suynda Depósito — Inventory Provocation (C-7)",
+  "description": "La forma SEMÁNTICA con la que un módulo externo provoca una operación en Depósito (C-7). Diseñada ahora, activada con el primer consumidor real (E-bis (b)). Sin endpoint, sin auth, sin paginación: eso es el OpenAPI de Depósito. El caller NO manda costo (C-3), ni CostEffect, ni movimientos, ni lotes: Depósito decide picking, lotes, ramas y costo. Cerrada (additionalProperties: false). Los enums se GENERAN desde data/enums.json y data/modules.json por scripts/generate-schema.mjs — no editar a mano. Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN.",
+  "$ref": "#/$defs/inventoryProvocation",
+  "$defs": {
+    "positiveDecimalString": {
+      "type": "string",
+      "pattern": "^[0-9]+(\\.[0-9]+)?$",
+      "description": "Cantidad en unidad base, siempre positiva; la dirección la da operation_type."
+    },
+    "causalIdentity": {
+      "type": "object",
+      "description": "C-10 / DEP-30 — obligatoria. origen_module es el módulo que provoca.",
+      "additionalProperties": false,
+      "required": [
+        "origen_module",
+        "documento_causante"
+      ],
+      "properties": {
+        "origen_module": {
+          "type": "string",
+          "description": "ModuleKey — GENERATED from data/modules.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "foundation",
+            "padron",
+            "factura",
+            "deposito",
+            "nucleo",
+            "compra",
+            "talento",
+            "visibilidad",
+            "conecta",
+            "lab",
+            "vet",
+            "taller",
+            "milk",
+            "farm",
+            "comercio"
+          ]
+        },
+        "documento_causante": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "provocationLine": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "item_id",
+        "quantity"
+      ],
+      "properties": {
+        "item_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "quantity": {
+          "$ref": "#/$defs/positiveDecimalString"
+        }
+      }
+    },
+    "inventoryProvocation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "operation_type",
+        "cause",
+        "tenant_id",
+        "almacen_id",
+        "almacen_destino_id",
+        "effective_at",
+        "lines"
+      ],
+      "properties": {
+        "operation_type": {
+          "type": "string",
+          "description": "InventoryOperationType — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand. Provocables desde afuera en V1: RECEIPT, ISSUE, TRANSFER; el resto son actos de Depósito y el OpenAPI los rechaza.",
+          "enum": [
+            "OPENING_INVENTORY",
+            "RECEIPT",
+            "ISSUE",
+            "TRANSFER",
+            "COUNT_ADJUSTMENT",
+            "REVERSAL",
+            "WRITE_OFF",
+            "TRUE_UP",
+            "SHORTFALL_RECONCILIATION"
+          ]
+        },
+        "cause": {
+          "$ref": "#/$defs/causalIdentity"
+        },
+        "tenant_id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "almacen_id": {
+          "type": "string",
+          "minLength": 1,
+          "description": "En TRANSFER es el ORIGEN."
+        },
+        "almacen_destino_id": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Sólo en TRANSFER. Ambos legs comparten effective_at (DEP-27); la autorización se evalúa sobre origen Y destino."
+        },
+        "effective_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "lines": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/provocationLine"
+          }
+        }
+      }
+    }
+  }
+}

@@ -2,7 +2,8 @@
   "_status": "PROPUESTO",
   "_notes": [
     "Asignaciones de política finales llegan con el security pass.",
-    "factura.emit: FAIL_CLOSED contra datos de padron y FAIL_AFTER_GRACE contra créditos — dos chequeos de una misma operación (§8.1 nota)."
+    "factura.emit: FAIL_CLOSED contra datos de padron y FAIL_AFTER_GRACE contra créditos — dos chequeos de una misma operación (§8.1 nota).",
+    "deposito.*: Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN · C-6, C-7, A-4, DEP-01/02, DEP-21, DEP-38. lock_date.advance es initiator user: mover la fecha de cierre es un acto humano, autorizado y auditado (DEP-21); un servicio no cierra períodos en V1. economic_consequence.pull es initiator system: A-4 es una frontera service-to-service Núcleo→owner; un auditor humano entra por operation.read o una superficie de reporte, no por la capability de integración. Es la PRIMERA capability system-only del catálogo — no hay precedente anterior en v0.10.0. Estas filas existen ANTES de la primera línea de código de Depósito: foundation niega por defecto toda capability desconocida (auth/capability.ts) y rechaza sembrar servicios con permisos no declarados acá (seed/run.ts)."
   ],
   "capabilities": [
     {
@@ -79,6 +80,31 @@
       "key": "compra.document.approve",
       "availability": "FAIL_AFTER_GRACE",
       "initiator": "user"
+    },
+    {
+      "key": "deposito.operation.read",
+      "availability": "FAIL_OPEN",
+      "initiator": "both"
+    },
+    {
+      "key": "deposito.operation.post",
+      "availability": "FAIL_AFTER_GRACE",
+      "initiator": "both"
+    },
+    {
+      "key": "deposito.position.read",
+      "availability": "FAIL_OPEN",
+      "initiator": "both"
+    },
+    {
+      "key": "deposito.lock_date.advance",
+      "availability": "FAIL_CLOSED",
+      "initiator": "user"
+    },
+    {
+      "key": "deposito.economic_consequence.pull",
+      "availability": "FAIL_OPEN",
+      "initiator": "system"
     }
   ]
 }
