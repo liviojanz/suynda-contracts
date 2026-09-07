@@ -282,6 +282,70 @@ servidor.
 
 ---
 
+## 6-bis. TODO MÓDULO NACE EN MODO PILOTO
+
+**Decisión del fundador, 6-sep-2026.** El candado que Lab tenía como suyo deja de ser
+particular: **es pieza estándar, y cada módulo la trae de fábrica.**
+
+### El ciclo de vida, en tres etapas
+
+```
+   nace en PILOTO  →  piloto (tenants agregados a mano)  →  APERTURA EXPLÍCITA
+```
+
+**Las tres reglas, y ninguna es un default:**
+
+| regla | qué significa |
+|---|---|
+| **Sin variable = CERRADO** | nadie entra, **con o sin entitlement**. Fail-closed, sin excepción |
+| **Los tenants del piloto se agregan A MANO** | es un acto deliberado, uno por uno |
+| **La apertura al público es un VALOR EXPLÍCITO** (`*` o equivalente) | **jamás la ausencia de la variable** |
+
+> **Por qué la tercera regla existe, y es la que importa.** Si «abierto» fuera la
+> ausencia de la variable, cualquiera abriría un módulo al público **limpiando
+> env** — un descuido de configuración indistinguible de una decisión. Con un
+> valor explícito, abrir es algo que alguien escribió.
+
+### Lo que el módulo trae de fábrica
+
+El patrón probado es el de Lab, y viaja entero:
+
+1. **El candado**: la lista se evalúa **ADEMÁS** del entitlement, nunca en su lugar,
+   y sin red — no depende de que Foundation esté arriba
+   (`lab/src/platform/lab-context.ts:36-46,72`).
+2. **La denegación honesta (B.2-21)**, que es la mitad que suele faltar. Un candado
+   sin pantalla es un 403 crudo. La pantalla dice **la causa** y ofrece **sólo las
+   salidas que sirven**: si el espacio no tiene el módulo, activar y volver; si es el
+   candado o las facultades, **sólo volver** — ofrecer activar ahí es mentir, porque
+   activar no lo dejaría entrar igual.
+3. **Las salidas NO dependen del marco.** El origen del hub se resuelve en el
+   **servidor**, desde una variable requerida. Quien fue rechazado es exactamente
+   quien no puede pedir el marco: el BFF del propio módulo corre el mismo guard y le
+   contesta 403. *(Se descubrió en producción el 6-sep; ver `corrida-act-1a-fix-diseno.md`.)*
+
+**Alcance:** entra a **`@suynda/modulo`** (Fase 2), con su denegación incluida. Hasta
+que el paquete exista, cada módulo lo calca del de Lab.
+
+---
+
+## 6-ter. LA PÁGINA DE PRESENTACIÓN — todo módulo la trae al integrarse
+
+**Decisión del fundador, 6-sep-2026.** Un módulo que sólo se puede *activar* no se
+puede *descubrir*. Cada módulo trae **su página de presentación dentro del hub**:
+
+- **qué hace** y **para quién**;
+- una tecla **«Activar»** que salta al centro de módulos;
+- vive en el hub, **no** en el sitio público de marketing: desde adentro del producto,
+  mandar a la landing es expulsar a la persona del sistema.
+
+**El copy base es el de su tarjeta** en «Descubrí módulos», que ya existe y ya fue
+aprobado. La página no lo reemplaza: lo expande.
+
+**Sin página de presentación, el módulo no está integrado.** Es del mismo rango que
+el manifiesto y la métrica de plan: parte de nacer, no un adorno posterior.
+
+---
+
 ## 7. Hub — nada por módulo, con dos excepciones nombradas
 
 Desde UI-0a-bis el hub no cablea nada por módulo: ícono por `key`, `url` compuesta y `kind` los
@@ -337,6 +401,8 @@ Los que van a morder al próximo módulo aunque haga todo lo de arriba bien.
 | Siembra de `<key>-service` en `service_registry` | `suynda-foundation` | antes de que un módulo llame con token de servicio |
 | Cómo se autentica el módulo contra Padrón — hoy Lab reenvía el token de la persona (`src/padron/http.ts:25`); el Plan v1.1 Enmienda 8 pedía declararlo o firmar el riesgo | fundador | verificar que la firma exista |
 | El alta ofreciendo módulos distintos de `compra` | `suynda-foundation` | con el primer vertical comercial |
+| El candado de piloto y su denegación (§6-bis) como pieza de `@suynda/modulo`, en vez de calcarse | `liviojanz` | Fase 2 |
+| La página de presentación de cada módulo (§6-ter) — `compra` y `lab` se escriben primero | `suynda-landing` + el módulo que nace | al integrarse |
 | `@suynda/modulo` y el starter v2 — §5 | `liviojanz` | **antes de Run #4** (ver handbook, Fase 2) |
 
 ---
@@ -351,6 +417,7 @@ Los que van a morder al próximo módulo aunque haga todo lo de arriba bien.
 | Entorno | los nombres de §4, del servicio que ya anda | fail-fast al arrancar |
 | Plomería | consume `@suynda/modulo`; escribe sólo enforcement y auditoría | **hoy nada** — ver §10 |
 | UI | pinea `@suynda/ui`, monta el marco, cero CSS | dos compuertas en CI, en cero |
-| Hub | nada | — |
+| Hub | su página de presentación (§6-ter) | revisión humana: sin ella no está integrado |
+| Piloto | candado fail-closed + denegación honesta (§6-bis) | el guard, y la pantalla que lo explica |
 | Despliegue | la ficha de §8, con el smoke que ve negar | revisión humana |
 | Verificación | §9 y la integración local | CI |
