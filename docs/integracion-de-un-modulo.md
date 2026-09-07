@@ -177,22 +177,46 @@ GET /api/departments  →  { departments: [{ id, label }] }
 entitlement — **sin exigir ninguna función**: quien llama es un admin del tenant que puede no tener
 ninguna tilde del módulo.
 
-**Convención propuesta para el módulo #3 en adelante** — a firmar:
+**CONVENCIÓN FIRMADA** (fundador, 7-sep-2026 · corrida TP-1). **Todo módulo con alcance la
+sirve**; Lab la sirve desde `0f20ef1+`:
 
 ```
 GET /api/alcances?scope_type=<el string del manifiesto>
   → 200 { scope_type, opciones: [{ id: string, label: string }] }
-  → 400 si el scope_type no es uno que el módulo declaró
+  → 400 { code: "SCOPE_TYPE_UNKNOWN" }   ← no es uno de los que el módulo declara
 ```
 
 Una sola ruta por módulo, cualquiera sea su cantidad de dimensiones, y el hub la compone con la
-`url` que `/v1/shell` ya sirve. `GET /api/departments` de Lab queda como alias hasta que el hub
-consuma la nueva.
+`url` que `/v1/shell` ya sirve — **no con una tabla de URLs propia**.
 
-> **Hoy el hub NO llama a ninguna de las dos.** Sólo mira si `MODULE_URLS[moduleKey]` existe para
-> decidir si avisa «No pudimos cargar los nombres; se muestran los identificadores»
-> (`equipo.ts:1028-1031`). El picker por nombre es un pendiente de plataforma con dueño
-> `suynda-landing`, registrado en `lab/docs/design/pendientes-plataforma.md`. Ver §10.
+Las cinco reglas, y cada una tiene su razón:
+
+1. **El `scope_type` es el string del manifiesto, opaco.** Ni la plataforma ni el hub lo
+   interpretan: lo reciben en `/v1/members/catalog` (`members-catalog.ts:106-109`, *«el VALOR es
+   opaco… se lo pasa al módulo cuando le pide las opciones»*) y se lo devuelven al módulo tal cual.
+2. **El conjunto válido SE DERIVA DEL MANIFIESTO, no se escribe al lado.** El módulo valida contra
+   los `functions[].scope_type` que él mismo declaró. Una segunda lista sería la verdad paralela
+   que después driftea, y el día que el módulo agregue una dimensión la ruta la acepta sola.
+3. **El `id` ES el ref.** Viaja verbatim a `member_module_grant_scope_refs` y vuelve verbatim
+   cuando el módulo autoriza. El módulo lo emite y el módulo lo interpreta; nadie más lo lee.
+4. **Gateada por `authorize()` sin exigir función** — sesión, tenant, allowlist y entitlement.
+   Quien llama es un admin del tenant que puede no tener ninguna tilde del módulo; gatear por una
+   función rompería el picker justo para el usuario principal (Pasada 4 §2.2, firmado).
+5. **`SCOPE_TYPE_UNKNOWN` es 400, no 404.** Un `scope_type` que el módulo no declara es un bug del
+   llamador, no un recurso ausente. Y el hub, ante **cualquier** error de esta ruta, cae al modo
+   degradado que ya tiene (refs crudos con su aviso) — **nunca a una lista vacía**, que se leería
+   como «este espacio no tiene departamentos» y es una mentira distinta.
+
+`GET /api/departments` de Lab **queda como alias**, cuidado por su propio test: hay consumidores
+fuera de nuestra vista y retirarlo es una decisión aparte, no un efecto de esta corrida.
+
+> **El hub todavía NO llama a ninguna de las dos — la ruta existe antes que su consumidor, a
+> propósito.** Hoy sólo mira si `MODULE_URLS[moduleKey]` existe para decidir si avisa «No pudimos
+> cargar los nombres; se muestran los identificadores» (`equipo.ts:1028-1031`). **TP-2 lo cierra**
+> (`suynda-foundation/docs/design/corrida-tarjeta-permisos-diseno.md` §4.4): el hub pide las
+> opciones con la `url` del shell y el modo degradado pasa a ser el fallback, no el estado normal.
+> Mientras tanto sigue registrado como pendiente de plataforma con dueño `suynda-landing` en
+> `lab/docs/design/pendientes-plataforma.md`. Ver §10.
 
 ### 3.6 · Lo que la tarjeta NO usa
 
@@ -208,7 +232,7 @@ campos.
 | las tildes tengan nombre y orden | `functions[].nombre`, `descripcion`, `orden` | `verify-v0.mjs` + siembra |
 | una tilde pida alcance | `functions[].scope_type` | guard scoped ⇒ no delegable |
 | los chips existan | `permission_presets` | guard de referencia y de conjunto único |
-| el selector muestre nombres | `GET /api/alcances` (propuesto) o `/api/departments` (Lab) | **nadie todavía** — hueco del hub |
+| el selector muestre nombres | `GET /api/alcances` (§3.5, **firmada**) | el módulo la sirve; el hub la consume desde TP-2 |
 
 ---
 

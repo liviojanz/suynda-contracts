@@ -249,6 +249,11 @@
       "code": "DEPOSITO_REVERSAL_TARGET_INVALID",
       "http": 422,
       "message_es": "La reversa tiene que apuntar a una operación existente del mismo ítem y almacén"
+    },
+    {
+      "code": "SCOPE_TYPE_UNKNOWN",
+      "http": 400,
+      "message_es": "Ese tipo de alcance no es uno de los que este módulo declara"
     }
   ]
 }
