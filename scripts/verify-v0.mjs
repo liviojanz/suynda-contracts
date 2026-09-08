@@ -51,22 +51,28 @@ function verifyCompraManifest(m) {
   const fnKeys = new Set(m.functions.map((f) => f.function_key));
   const roleKeys = new Set(m.roles.map((r) => r.role_key));
 
-  // Los cuatro roles C7 siguen declarados (la FK de module_access_grants y la
-  // matriz de invitations los necesitan) …
-  const C7 = ["superadmin", "admin", "approver", "uploader"];
-  if (!sameSet(m.roles.map((r) => r.role_key), C7)) {
+  // COMPRA NO DECLARA ROLES — ROLES-GOBIERNO (7-sep, firmado).
+  //
+  // Antes exigía «los cuatro roles C7 siguen declarados», con esta razón: «la FK
+  // de module_access_grants y la matriz de invitations los necesitan». LA FK
+  // EXISTE DE VERDAD —`module_access_grants (module_key, role_key) REFERENCES
+  // module_roles (module_key, role_key)`, verificada en la base— pero el
+  // razonamiento asumía que dejar de declararlos los BORRA, y no los borra:
+  // `manifest-seed.ts:190-210` los DEPRECRA (`deprecada_at = now()`), las filas
+  // quedan, y la FK sigue satisfecha. La doctrina anti-resurrección, que estaba
+  // pensada para otra cosa, es lo que hace seguro este cambio.
+  //
+  // Y la matriz de invitations tampoco los necesita: su CHECK es de TEXTO sobre
+  // `invitations.requested_role` (023:48-50) y no mira `module_roles`.
+  if (m.roles.length !== 0) {
     errors.push(
-      `compra roles must remain exactly ${JSON.stringify(C7)}; got ${JSON.stringify(sorted(m.roles.map((r) => r.role_key)))}`,
+      `compra must declare NO roles (ROLES-GOBIERNO: el rol es gobierno del espacio y no se consulta dentro de un módulo); got ${JSON.stringify(sorted(m.roles.map((r) => r.role_key)))}`,
     );
   }
-  // … y NINGUNO deriva funciones. Un rol con functions no vacío resucitaría
-  // la derivación que EQ-3 apagó en producción.
-  for (const role of m.roles) {
-    if (!Array.isArray(role.functions) || role.functions.length !== 0) {
-      errors.push(
-        `compra role ${role.role_key} must declare functions: [] (EQ-3 — la derivación rol→función está apagada); got ${JSON.stringify(role.functions)}`,
-      );
-    }
+  if (Object.keys(m.role_grant_matrix).length !== 0) {
+    errors.push(
+      `compra role_grant_matrix must be empty when it declares no roles; got ${JSON.stringify(Object.keys(m.role_grant_matrix))}`,
+    );
   }
 
   for (const role of m.roles) {
@@ -476,9 +482,12 @@ console.log(
   schema.additionalProperties,
 );
 
+// ROLES-GOBIERNO (7-sep): TRES, y son gobierno del espacio. `approver` y
+// `uploader` murieron — eran capacidades operativas de compra disfrazadas de
+// gobierno; renacen como funciones tildables del módulo.
 const rolesOk =
   JSON.stringify(ROLE_KEYS) ===
-    JSON.stringify(["superadmin", "admin", "approver", "uploader"]) &&
+    JSON.stringify(["superadmin", "admin", "miembro"]) &&
   JSON.stringify(PRIVILEGED_ROLE_KEYS) ===
     JSON.stringify(["superadmin", "admin"]);
 console.log("Role C7 catalog:", rolesOk, ROLE_KEYS, PRIVILEGED_ROLE_KEYS);
