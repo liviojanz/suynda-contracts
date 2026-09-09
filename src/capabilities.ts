@@ -5,10 +5,10 @@
 
 import capabilitiesData from "../data/capabilities.json" with { type: "json" };
 
-export type CapabilityAvailability =
-  | "FAIL_OPEN"
-  | "FAIL_AFTER_GRACE"
-  | "FAIL_CLOSED";
+// RC-wire v0.13.0 (D28): la fuente material es data/enums.json; acá sólo se
+// re-exporta para que el path público de siempre no cambie.
+export type { CapabilityAvailability } from "./enums.js";
+import type { CapabilityAvailability } from "./enums.js";
 
 export type CapabilityInitiator = "user" | "system" | "both";
 

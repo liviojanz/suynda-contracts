@@ -1,0 +1,17 @@
+{
+  "_schema": "foundation-wire",
+  "_def": "platformJwks",
+  "_source": "foundation/src/http/routes/jwks.ts:14-17 · src/auth/keys.ts:49-50, 75, 91-93 — export jose de Ed25519 + kid (thumbprint) + alg + use",
+  "body": {
+    "keys": [
+      {
+        "kty": "OKP",
+        "crv": "Ed25519",
+        "x": "11qYAYKxCrfVS_7TyWQHOg7hcvPapiMlrwIaaPcHURo",
+        "kid": "kQ9m2Hf3vZx8pL1nR4tW7yB0cD5eG6hJ",
+        "alg": "Ed25519",
+        "use": "sig"
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "_schema": "foundation-wire",
+  "_def": "platformTokenClaims",
+  "_source": "foundation/src/auth/jwt.ts:106-118 (claims) · src/auth/session.ts:193, 291 (mandateId, tutelaId en sesión prestada) — tenant_id en snake, mandateId/tutelaId en camel, tal cual viajan (D13)",
+  "body": {
+    "sub": "6f1c2a44-9b1e-4a0a-8b2e-2f3d4c5e6a7b",
+    "iss": "https://suynda.com",
+    "aud": "suynda-users",
+    "iat": 1788000000,
+    "nbf": 1788000000,
+    "exp": 1788003600,
+    "jti": "c0a8012e-5d3f-4b7a-9e1c-0f2a3b4c5d6e",
+    "initiator": "user",
+    "tenant_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+    "mandateId": "9e8d7c6b-5a4f-4e3d-2c1b-0a9f8e7d6c5b"
+  }
+}

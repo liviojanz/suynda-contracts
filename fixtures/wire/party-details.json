@@ -1,0 +1,59 @@
+{
+  "_schema": "padron-parties",
+  "_def": "partyDetailsResponse",
+  "_source": "padron/src/party-service.ts:43-48 (PartyDetails = party + roles + contacts + branches) · src/db/types.ts:14-73 (las filas) · parties.ts:316-336 (GET ?identifier=)",
+  "body": {
+    "party": {
+      "id": "3c4d5e6f-7a8b-4c9d-8e0f-1a2b3c4d5e6f",
+      "tenant_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+      "tipo": null,
+      "razon_social": "Distribuidora del Este S.A.",
+      "nombre_fantasia": "DelEste",
+      "tipo_contribuyente": null,
+      "tipo_regimen": null,
+      "actividades_economicas": null,
+      "es_consumidor_final": false,
+      "entity_version": 2,
+      "deleted_at": null,
+      "created_at": "2026-09-09T15:00:00.000Z",
+      "updated_at": "2026-09-09T16:00:00.000Z"
+    },
+    "roles": [
+      {
+        "id": "4d5e6f7a-8b9c-4d0e-9f1a-2b3c4d5e6f7a",
+        "tenant_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+        "party_id": "3c4d5e6f-7a8b-4c9d-8e0f-1a2b3c4d5e6f",
+        "rol": "proveedor",
+        "activo": true,
+        "activated_at": "2026-09-09T15:00:00.000Z",
+        "deactivated_at": null
+      }
+    ],
+    "contacts": [
+      {
+        "id": "5e6f7a8b-9c0d-4e1f-8a2b-3c4d5e6f7a8b",
+        "tenant_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+        "party_id": "3c4d5e6f-7a8b-4c9d-8e0f-1a2b3c4d5e6f",
+        "tipo": null,
+        "valor": null,
+        "principal": false,
+        "created_at": "2026-09-09T15:00:00.000Z"
+      }
+    ],
+    "branches": [
+      {
+        "id": "6f7a8b9c-0d1e-4f2a-9b3c-4d5e6f7a8b9c",
+        "tenant_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+        "party_id": "3c4d5e6f-7a8b-4c9d-8e0f-1a2b3c4d5e6f",
+        "codigo": null,
+        "nombre": null,
+        "direccion": null,
+        "ciudad_id": null,
+        "tipo": null,
+        "entity_version": 1,
+        "created_at": "2026-09-09T15:00:00.000Z",
+        "updated_at": "2026-09-09T15:00:00.000Z"
+      }
+    ]
+  }
+}

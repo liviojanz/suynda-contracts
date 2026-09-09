@@ -2,7 +2,8 @@
   "_status": "PROPUESTO",
   "_notes": [
     "Starter set — se espera crecimiento. message_es en es-PY llano, sin siglas.",
-    "DEPOSITO_*: Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN · C-3, C-4, DEP-06, DEP-20/21, DEP-25/26, DEP-28, DEP-46; Charter criterio 4 y Enablement criterio 3 para los de admisión de ítem. Starter set."
+    "DEPOSITO_*: Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN · C-3, C-4, DEP-06, DEP-20/21, DEP-25/26, DEP-28, DEP-46; Charter criterio 4 y Enablement criterio 3 para los de admisión de ítem. Starter set.",
+    "RC-wire v0.13.0 (D15, D24): INTERNAL, BAD_REQUEST y ENTITLEMENT_MODULE_INVALID se declaran porque VIAJAN entre repos — INTERNAL y BAD_REQUEST son los dos fallbacks de los manejadores de Foundation (src/http/server.ts:614-634) y Padrón (src/http/server.ts:78-96); ENTITLEMENT_MODULE_INVALID lo emite GET /v1/entitlements/check ante un module fuera de MODULE_KEYS (entitlements.ts:105-111). El message_es es copy canónico del código, NO obligación byte a byte para los productores: BAD_REQUEST hoy lleva el texto del framework, y eso no se congela como protocolo. TENANT_MISSING, NOT_FOUND y PADRON_UNAVAILABLE NO se promueven: son módulo → su propio navegador."
   ],
   "errors": [
     {
@@ -254,6 +255,21 @@
       "code": "SCOPE_TYPE_UNKNOWN",
       "http": 400,
       "message_es": "Ese tipo de alcance no es uno de los que este módulo declara"
+    },
+    {
+      "code": "INTERNAL",
+      "http": 500,
+      "message_es": "Ocurrió un error interno"
+    },
+    {
+      "code": "BAD_REQUEST",
+      "http": 400,
+      "message_es": "La solicitud no es válida"
+    },
+    {
+      "code": "ENTITLEMENT_MODULE_INVALID",
+      "http": 400,
+      "message_es": "El módulo consultado no está declarado en @suynda/contracts"
     }
   ]
 }

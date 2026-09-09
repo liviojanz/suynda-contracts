@@ -183,7 +183,8 @@ sirve**; Lab la sirve desde `0f20ef1+`:
 ```
 GET /api/alcances?scope_type=<el string del manifiesto>
   → 200 { scope_type, opciones: [{ id: string, label: string }] }
-  → 400 { code: "SCOPE_TYPE_UNKNOWN" }   ← no es uno de los que el módulo declara
+  → 400 { error: { code: "SCOPE_TYPE_UNKNOWN", message } }   ← no es uno de los que el módulo declara;
+                                                              el sobre real de la plataforma (RC-wire v0.13.0)
 ```
 
 Una sola ruta por módulo, cualquiera sea su cantidad de dimensiones, y el hub la compone con la

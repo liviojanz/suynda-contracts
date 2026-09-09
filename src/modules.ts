@@ -20,7 +20,10 @@ import type { ModuleClass, ModuleKey, ModuleLevel } from "./enums.js";
  * siempre encendida (`plataforma`). `kind` dice que clase de negocio resuelve.
  * Son preguntas distintas y por eso son dos campos.
  */
-export type ModuleKind = "vertical" | "horizontal";
+// RC-wire v0.13.0 (D28): la fuente material es data/enums.json (ModuleKind);
+// acá sólo se re-exporta para que el path público de siempre no cambie.
+export type { ModuleKind } from "./enums.js";
+import type { ModuleKind } from "./enums.js";
 
 export interface ModuleSeed {
   key: ModuleKey;

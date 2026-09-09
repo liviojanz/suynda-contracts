@@ -1,0 +1,11 @@
+{
+  "_schema": "padron-parties",
+  "_def": "partyUpsertRequest",
+  "_source": "padron/src/http/routes/parties.ts:33-58 — body del POST /padron/v1/parties, additionalProperties: false en la raíz; identifier.tipo ∈ IdentifierType (D26); fields sólo las 5 claves que lee party-service.ts:74-95",
+  "body": {
+    "identifier": { "tipo": "RUC", "countryCode": "PY", "valor": "80012345-6" },
+    "razonSocial": "Distribuidora del Este S.A.",
+    "fields": { "nombre_fantasia": "DelEste" },
+    "roles": ["proveedor"]
+  }
+}

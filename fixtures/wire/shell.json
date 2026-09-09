@@ -1,0 +1,16 @@
+{
+  "_schema": "foundation-wire",
+  "_def": "shellResponse",
+  "_source": "foundation/src/shell/shell-service.ts:172-212 (response; launcher :190 action = entitled ? open : expand) · src/credits/credits-service.ts:68-74 (balance) · shell-service.ts:47-53 (tenant.razon_social nullable)",
+  "body": {
+    "user": { "id": "6f1c2a44-9b1e-4a0a-8b2e-2f3d4c5e6a7b", "nombre": "Livio" },
+    "tenant": { "id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d", "razon_social": null, "nombre_negocio": "Laboratorio Lucero" },
+    "launcher": [
+      { "key": "lab", "nombre": "Laboratorio", "descripcion": "Gestión del laboratorio clínico", "nivel": 1, "entitled": true, "action": "open", "kind": "vertical", "url": "https://lab.suynda.com" },
+      { "key": "compra", "nombre": "Compra", "descripcion": "Facturas de proveedores", "nivel": 2, "entitled": false, "action": "expand", "kind": "horizontal", "url": null }
+    ],
+    "balance": { "saldo": 1200, "en_sobregiro": false, "bajo": false, "gracia_restante": null },
+    "branding": { "logo_url": null, "color_primario": null, "color_acento": null },
+    "platform": { "hub_url": "https://suynda.com/panel" }
+  }
+}

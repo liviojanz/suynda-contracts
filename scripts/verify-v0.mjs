@@ -7,6 +7,11 @@ import {
   ERROR_CODES,
   METERED_OPERATIONS,
   ENUMS,
+  MODULE_KINDS,
+  CAPABILITY_AVAILABILITIES,
+  ENTITLEMENT_STATUSES,
+  LAUNCHER_ACTIONS,
+  TOKEN_INITIATORS,
   PLAN_KEYS,
   ROLE_KEYS,
   PRIVILEGED_ROLE_KEYS,
@@ -390,7 +395,9 @@ console.log(
 // negocio resuelve. Un comercial sin `kind` no sabria donde va en el riel —el
 // orden es casita, vertical(es), horizontales— y un plataforma CON `kind`
 // estaria afirmando algo falso: no es ni una cosa ni la otra.
-const KINDS = ["vertical", "horizontal"];
+// RC-wire v0.13.0 (D28): la lista ya no se copia acá; bebe de data/enums.json
+// vía MODULE_KINDS, la misma fuente que el tipo TS y el JSON Schema.
+const KINDS = MODULE_KINDS;
 const kindMal = MODULES.filter((m) =>
   m.clase === "comercial" ? !KINDS.includes(m.kind) : m.kind !== null,
 ).map((m) => `${m.key}=${JSON.stringify(m.kind)}`);
@@ -410,7 +417,7 @@ const ordenMal = MODULES.filter((m) =>
     : m.orden !== null,
 ).map((m) => `${m.key}=${JSON.stringify(m.orden)}`);
 const duplicados = [];
-for (const kind of ["vertical", "horizontal"]) {
+for (const kind of MODULE_KINDS) {
   const vistos = new Map();
   for (const m of MODULES.filter((x) => x.kind === kind)) {
     if (vistos.has(m.orden)) duplicados.push(`${kind} ${m.orden}: ${vistos.get(m.orden)} y ${m.key}`);
@@ -546,6 +553,66 @@ const depositoEvents = [
 const depositoEventsOk = depositoEvents.every((t) => actualTypes.includes(t));
 console.log("deposito events present:", depositoEventsOk);
 
+// ── RC-wire (v0.13.0) ────────────────────────────────────────────────────────
+// Tres códigos que VIAJAN entre repos, con su http exacto (D15, D24).
+const wireCodes = { INTERNAL: 500, BAD_REQUEST: 400, ENTITLEMENT_MODULE_INVALID: 400 };
+const wireCodesMal = Object.entries(wireCodes)
+  .filter(([code, http]) => ERROR_CODES.find((c) => c.code === code)?.http !== http)
+  .map(([code, http]) => `${code}→${http}`);
+const wireCodesOk = wireCodesMal.length === 0;
+console.log("wire error codes (INTERNAL/BAD_REQUEST/ENTITLEMENT_MODULE_INVALID):", wireCodesOk, wireCodesMal.join(", "));
+
+// Cinco enums con su conjunto EXACTO y en orden (D19: verificados cerrados uno
+// por uno; D28: ModuleKind y CapabilityAvailability promovidos a data/enums.json).
+const wireEnums = [
+  ["ModuleKind", MODULE_KINDS, ["vertical", "horizontal"]],
+  ["CapabilityAvailability", CAPABILITY_AVAILABILITIES, ["FAIL_OPEN", "FAIL_AFTER_GRACE", "FAIL_CLOSED"]],
+  ["EntitlementStatus", ENTITLEMENT_STATUSES, ["active", "suspended", "vencido", "ausente", "plataforma"]],
+  ["LauncherAction", LAUNCHER_ACTIONS, ["open", "expand"]],
+  ["TokenInitiator", TOKEN_INITIATORS, ["user", "system"]],
+];
+const wireEnumsMal = wireEnums
+  .filter(([name, actual, expected]) => JSON.stringify([...actual]) !== JSON.stringify(expected) || JSON.stringify([...ENUMS[name]]) !== JSON.stringify(expected))
+  .map(([name, actual]) => `${name}=${JSON.stringify(actual)}`);
+const wireEnumsOk = wireEnumsMal.length === 0;
+console.log("wire enums exact (5):", wireEnumsOk, wireEnumsMal.join(", "));
+
+// Los enums INYECTADOS de los schemas nuevos llevan la marca del generador y no
+// quedaron vacíos: un `"enum": []` que nadie inyectó rechazaría todo valor.
+const wireInjected = {
+  "foundation-wire.schema.json": [
+    ["$defs", "platformTokenClaims", "properties", "initiator"],
+    ["$defs", "entitlementsCheckResponse", "properties", "module"],
+    ["$defs", "entitlementsCheckResponse", "properties", "status"],
+    ["$defs", "entitlementsCheckResponse", "properties", "politica"],
+    ["$defs", "shellLauncherItem", "properties", "key"],
+    ["$defs", "shellLauncherItem", "properties", "nivel"],
+    ["$defs", "shellLauncherItem", "properties", "action"],
+    ["$defs", "shellLauncherItem", "properties", "kind"],
+  ],
+  "padron-parties.schema.json": [
+    ["$defs", "partyIdentifier", "properties", "tipo"],
+    ["$defs", "partyUpsertRequest", "properties", "roles", "items"],
+    ["$defs", "partyRoleRow", "properties", "rol"],
+  ],
+};
+const wireSchemasMal = [];
+for (const [file, paths] of Object.entries(wireInjected)) {
+  const s = JSON.parse(readFileSync(join("schema", file), "utf8"));
+  for (const path of paths) {
+    const node = path.reduce((acc, k) => acc?.[k], s);
+    const okNode =
+      node !== undefined &&
+      Array.isArray(node.enum) &&
+      node.enum.length > 0 &&
+      typeof node.description === "string" &&
+      node.description.includes("GENERATED from");
+    if (!okNode) wireSchemasMal.push(`${file}#${path.join("/")}`);
+  }
+}
+const wireSchemasGenerated = wireSchemasMal.length === 0;
+console.log("wire schemas injected (11 nodes):", wireSchemasGenerated, wireSchemasMal.join(", "));
+
 const pass =
   ok1.ok === true &&
   ok2.ok === false &&
@@ -571,7 +638,10 @@ const pass =
   noScopeTypeEnum &&
   grantEventsOk &&
   noLegacyStockEvents &&
-  depositoEventsOk;
+  depositoEventsOk &&
+  wireCodesOk &&
+  wireEnumsOk &&
+  wireSchemasGenerated;
 
 console.log(pass ? "\nDoD CHECK: PASS" : "\nDoD CHECK: FAIL");
 process.exit(pass ? 0 : 1);

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://suynda.com/schemas/error-envelope.schema.json",
+  "title": "Suynda — sobre de error de la plataforma",
+  "description": "RC-wire (v0.13.0). El sobre que producen Foundation, Padrón y los módulos hacia su navegador, y que leen el hub y los consumidores de Padrón. `code` es string y no el catálogo cerrado: el mismo sobre transporta códigos locales de módulo (D24). `message` es texto humano opaco. `detail` es opcional y sin estructura garantizada (D23). ABIERTO a propósito: el sobre es extensible. Source: foundation/src/http/server.ts:614-634 · padron/src/http/server.ts:78-96 · padron/src/http/errors.ts:22-24.",
+  "$ref": "#/$defs/errorEnvelope",
+  "$defs": {
+    "errorEnvelope": {
+      "type": "object",
+      "required": ["error"],
+      "properties": {
+        "error": {
+          "type": "object",
+          "required": ["code", "message"],
+          "properties": {
+            "code": {
+              "type": "string",
+              "minLength": 1,
+              "description": "Código estable. Global (data/error-codes.json) o local del módulo emisor."
+            },
+            "message": {
+              "type": "string",
+              "description": "Texto humano, es-PY. No es protocolo: el message_es del catálogo es copy canónico, no obligación byte a byte."
+            },
+            "detail": {
+              "description": "Opcional. Contenido libre del productor; contracts no lo estructura."
+            }
+          }
+        }
+      }
+    }
+  }
+}

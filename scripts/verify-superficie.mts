@@ -57,6 +57,64 @@ import {
   type ConsequenceRole,
 } from "../dist/index.js";
 
+// ── RC-wire (v0.13.0): el wire de plataforma, importable y TIPADO ────────────
+// Misma lección: si un tipo o una constante deja de exportarse, esto no compila.
+import {
+  FOUNDATION_JWKS_USERS_PATH,
+  FOUNDATION_JWKS_SERVICES_PATH,
+  FOUNDATION_ENTITLEMENTS_CHECK_PATH,
+  FOUNDATION_ENTITLEMENTS_CHECK_MODULE_QUERY,
+  FOUNDATION_SHELL_PATH,
+  PLATFORM_JWT_ALG,
+  PADRON_PARTIES_PATH,
+  PADRON_PARTIES_IDENTIFIER_QUERY,
+  padronPartyPath,
+  padronPartyRolesPath,
+  IDEMPOTENCY_KEY_HEADER,
+  IDEMPOTENCY_REPLAYED_HEADER,
+  PARTY_IDENTIFIER_SEPARATOR,
+  isIdentifierType,
+  parsePartyIdentifier,
+  formatPartyIdentifier,
+  isPartyIdentifierString,
+  isErrorEnvelope,
+  MODULE_KINDS,
+  CAPABILITY_AVAILABILITIES,
+  ENTITLEMENT_STATUSES,
+  LAUNCHER_ACTIONS,
+  TOKEN_INITIATORS,
+  type PlatformJwk,
+  type PlatformJwks,
+  type PlatformTokenHeader,
+  type PlatformTokenClaims,
+  type EntitlementsCheckQuery,
+  type ResolvedFunctionAccess,
+  type EntitlementsCheckResponse,
+  type ShellUser,
+  type ShellTenant,
+  type ShellLauncherItem,
+  type ShellBalance,
+  type ShellBranding,
+  type ShellPlatform,
+  type ShellResponse,
+  type PartyIdentifier,
+  type ParsePartyIdentifierResult,
+  type PartyFields,
+  type PartyUpsertRequest,
+  type PartyRow,
+  type PartyRoleRow,
+  type PartyContactRow,
+  type PartyBranchRow,
+  type PartyDetailsResponse,
+  type PartyUpsertResponse,
+  type PartyRolesResponse,
+  type ErrorEnvelope,
+  type EntitlementStatus,
+  type LauncherAction,
+  type TokenInitiator,
+  type CapabilityAvailability,
+} from "../dist/index.js";
+
 // ── Los TIPOS: si alguno deja de exportarse, esto no compila ───────────────
 const kinds: ModuleKind[] = ["vertical", "horizontal"];
 const unaSemilla: ModuleSeed = MODULES[0]!;
@@ -197,6 +255,89 @@ const faltan = esperados.filter((c) => !camposDelDato.includes(c));
 if (sobran.length) problemas.push(`el JSON trae campos que el tipo no declara: ${sobran.join(", ")}`);
 if (faltan.length) problemas.push(`el tipo declara campos que el JSON no trae: ${faltan.join(", ")}`);
 
+// ── RC-wire: literales que COMPILEN contra cada forma del wire ───────────────
+// Valores ficticios; la validación semántica contra los schemas es trabajo de
+// verify-wire.mts. Lo que se prueba acá es que la FORMA exportada es la firmada.
+const jwk: PlatformJwk = { kty: "OKP", crv: "Ed25519", x: "x", kid: "kid", alg: PLATFORM_JWT_ALG, use: "sig" };
+const jwks: PlatformJwks = { keys: [jwk] };
+const header: PlatformTokenHeader = { alg: "Ed25519", kid: jwk.kid };
+const unInitiator: TokenInitiator = TOKEN_INITIATORS[0]!;
+const claims: PlatformTokenClaims = {
+  sub: "u", iss: "https://suynda.com", aud: "suynda-users", iat: 1, nbf: 1, exp: 2, jti: "j",
+  initiator: unInitiator, tenant_id: "t", mandateId: "m",
+};
+const query: EntitlementsCheckQuery = { module: "lab" };
+const unStatus: EntitlementStatus = ENTITLEMENT_STATUSES[0]!;
+const unaPolitica: CapabilityAvailability = CAPABILITY_AVAILABILITIES[1]!;
+const acceso: ResolvedFunctionAccess = { function_key: "cargar", scope_type: "departamento", scope_refs: [], all_scopes: false };
+const check: EntitlementsCheckResponse = {
+  tenant_id: "t", module: query.module, activo: true, status: unStatus, valid_to: null,
+  politica: unaPolitica, cache_max_seconds: 60, verificado_at: ahora, grants: ["ver"], functions: [acceso],
+};
+const unaAccion: LauncherAction = LAUNCHER_ACTIONS[0]!;
+const unKindDeModulo: ModuleKind = MODULE_KINDS[0]!;
+const item: ShellLauncherItem = { key: "lab", nombre: "Laboratorio", descripcion: "", nivel: 1, entitled: true, action: unaAccion, kind: unKindDeModulo, url: null };
+const usuario: ShellUser = { id: "u", nombre: "Livio" };
+const espacio: ShellTenant = { id: "t", razon_social: null, nombre_negocio: "Lucero" };
+const saldo: ShellBalance = { saldo: 0, en_sobregiro: false, bajo: false, gracia_restante: null };
+const marca: ShellBranding = { logo_url: null, color_primario: null, color_acento: null };
+const plataforma: ShellPlatform = { hub_url: "https://suynda.com/panel" };
+const shell: ShellResponse = { user: usuario, tenant: espacio, launcher: [item], balance: saldo, branding: marca, platform: plataforma };
+const ident: PartyIdentifier = { tipo: "RUC", countryCode: "PY", valor: "80012345-6" };
+const parseado: ParsePartyIdentifierResult = parsePartyIdentifier(formatPartyIdentifier(ident));
+const campos: PartyFields = { nombre_fantasia: null };
+const pedido: PartyUpsertRequest = { identifier: { tipo: "RUC", valor: "1" }, razonSocial: "X", fields: campos, roles: ["proveedor"] };
+const fila: PartyRow = {
+  id: "p", tenant_id: "t", tipo: null, razon_social: "X", nombre_fantasia: null, tipo_contribuyente: null,
+  tipo_regimen: null, actividades_economicas: null, es_consumidor_final: false, entity_version: 1,
+  deleted_at: null, created_at: ahora, updated_at: ahora,
+};
+const rol: PartyRoleRow = { id: "r", tenant_id: "t", party_id: "p", rol: "proveedor", activo: true, activated_at: ahora, deactivated_at: null };
+const contacto: PartyContactRow = { id: "c", tenant_id: "t", party_id: "p", tipo: null, valor: null, principal: false, created_at: ahora };
+const sucursal: PartyBranchRow = { id: "b", tenant_id: "t", party_id: "p", codigo: null, nombre: null, direccion: null, ciudad_id: null, tipo: null, entity_version: 1, created_at: ahora, updated_at: ahora };
+const detalle: PartyDetailsResponse = { party: fila, roles: [rol], contacts: [contacto], branches: [sucursal] };
+const alta: PartyUpsertResponse = { party: fila, created: true };
+const roles: PartyRolesResponse = { roles: [rol] };
+const sobre: ErrorEnvelope = { error: { code: "CAPABILITY_DENIED", message: "No" } };
+
+// ── RC-wire: los VALORES ────────────────────────────────────────────────────
+if (FOUNDATION_JWKS_USERS_PATH !== "/.well-known/jwks-users.json" || FOUNDATION_JWKS_SERVICES_PATH !== "/.well-known/jwks-services.json") {
+  problemas.push("los paths del JWKS de Foundation no son los observados");
+}
+if (FOUNDATION_ENTITLEMENTS_CHECK_PATH !== "/v1/entitlements/check" || FOUNDATION_ENTITLEMENTS_CHECK_MODULE_QUERY !== "module" || FOUNDATION_SHELL_PATH !== "/v1/shell") {
+  problemas.push("los paths de entitlements/shell de Foundation no son los observados");
+}
+if (PADRON_PARTIES_PATH !== "/padron/v1/parties" || PADRON_PARTIES_IDENTIFIER_QUERY !== "identifier" || PARTY_IDENTIFIER_SEPARATOR !== ":") {
+  problemas.push("los paths de parties de Padrón no son los observados");
+}
+if (IDEMPOTENCY_KEY_HEADER !== "idempotency-key" || IDEMPOTENCY_REPLAYED_HEADER !== "idempotency-replayed") {
+  problemas.push("los headers de idempotencia no son los observados");
+}
+if (padronPartyPath("a b") !== "/padron/v1/parties/a%20b" || padronPartyRolesPath("x") !== "/padron/v1/parties/x/roles") {
+  problemas.push("los compositores de path de parties no componen lo esperado");
+}
+if (!parseado.ok || parseado.value.valor !== ident.valor || !isPartyIdentifierString("CI::1") || !isIdentifierType("CI") || isIdentifierType("DNI")) {
+  problemas.push("el codec del identificador no llega funcionando desde el entry");
+}
+if (!isErrorEnvelope(sobre) || isErrorEnvelope({ detail: "x" })) {
+  problemas.push("isErrorEnvelope no distingue el sobre de la plataforma");
+}
+if (JSON.stringify([...MODULE_KINDS]) !== JSON.stringify(["vertical", "horizontal"])) {
+  problemas.push(`MODULE_KINDS debe ser exactamente vertical,horizontal; llegó ${JSON.stringify(MODULE_KINDS)}`);
+}
+if (JSON.stringify([...CAPABILITY_AVAILABILITIES]) !== JSON.stringify(["FAIL_OPEN", "FAIL_AFTER_GRACE", "FAIL_CLOSED"])) {
+  problemas.push(`CAPABILITY_AVAILABILITIES cambió: ${JSON.stringify(CAPABILITY_AVAILABILITIES)}`);
+}
+if (JSON.stringify([...ENTITLEMENT_STATUSES]) !== JSON.stringify(["active", "suspended", "vencido", "ausente", "plataforma"])) {
+  problemas.push(`ENTITLEMENT_STATUSES cambió: ${JSON.stringify(ENTITLEMENT_STATUSES)}`);
+}
+if (JSON.stringify([...LAUNCHER_ACTIONS]) !== JSON.stringify(["open", "expand"]) || JSON.stringify([...TOKEN_INITIATORS]) !== JSON.stringify(["user", "system"])) {
+  problemas.push("LAUNCHER_ACTIONS o TOKEN_INITIATORS cambiaron");
+}
+if (jwks.keys.length !== 1 || header.kid !== jwk.kid || claims.initiator !== "user" || check.functions?.length !== 1 || shell.launcher[0]?.key !== "lab" || detalle.roles.length !== 1 || !alta.created || roles.roles.length !== 1 || pedido.roles?.[0] !== "proveedor") {
+  problemas.push("las formas del wire no traen los valores esperados");
+}
+
 if (problemas.length) {
   console.error("SUPERFICIE ROTA:");
   for (const p of problemas) console.error(`  - ${p}`);
@@ -211,3 +352,4 @@ console.log(
     ITEM_TYPES.length + INVENTORY_OPERATION_TYPES.length + COST_EFFECT_KINDS.length + CONSEQUENCE_ROLES.length + QUANTITY_BRANCHES.length
   } valores de enum importables desde el entry; REVERSAL es rol, no kind.`,
 );
+console.log("superficie: RC-wire — 6 constantes de Foundation, 7 de Padron + 4 funciones del codec, isErrorEnvelope, 5 enums y 27 tipos del wire importables y TIPADOS desde el entry.");

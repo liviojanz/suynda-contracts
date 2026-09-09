@@ -1,0 +1,23 @@
+{
+  "_schema": "padron-parties",
+  "_def": "partyUpsertResponse",
+  "_source": "padron/src/http/routes/parties.ts:88-126 — { party, created }: 201 si creó, 200 si ya existía; PartyRow = src/db/types.ts:14-73",
+  "body": {
+    "party": {
+      "id": "3c4d5e6f-7a8b-4c9d-8e0f-1a2b3c4d5e6f",
+      "tenant_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+      "tipo": null,
+      "razon_social": "Distribuidora del Este S.A.",
+      "nombre_fantasia": "DelEste",
+      "tipo_contribuyente": null,
+      "tipo_regimen": null,
+      "actividades_economicas": null,
+      "es_consumidor_final": false,
+      "entity_version": 1,
+      "deleted_at": null,
+      "created_at": "2026-09-09T15:00:00.000Z",
+      "updated_at": "2026-09-09T15:00:00.000Z"
+    },
+    "created": true
+  }
+}

@@ -1,0 +1,427 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://suynda.com/schemas/padron-parties.schema.json",
+  "title": "Suynda Padrón — parties (upsert, detalle, roles)",
+  "description": "RC-wire (v0.13.0). Forma documentada de las tres rutas de parties que un módulo consume, tal cual Padrón las sirve (D17, D20). Los enums se GENERAN desde data/enums.json por scripts/generate-schema.mjs — no editar a mano. Las respuestas son ABIERTAS. El request refleja el additionalProperties: false que el PRODUCTOR declara (parties.ts:52); en runtime Fastify DESCARTA las claves de más en silencio, no las rechaza (D25) — el rechazo explícito es corrida de adopción de Padrón. Ownership D21: Padrón es registro maestro compartido; esto NO es precedente para las APIs de un módulo. Source: padron/src/http/routes/parties.ts:33-58, 88-126, 316-358 · party-service.ts:43-48, 74-80 · db/types.ts:14-73.",
+  "$defs": {
+    "isoDateTime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 serializable por JSON (D16)."
+    },
+    "partyIdentifier": {
+      "type": "object",
+      "description": "El identificador en el request. countryCode vacío o null: Padrón lo normaliza a PY (party-service.ts:57-72) — implementación del productor.",
+      "required": [
+        "tipo",
+        "valor"
+      ],
+      "properties": {
+        "tipo": {
+          "type": "string",
+          "description": "IdentifierType — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "RUC",
+            "CI",
+            "PASSPORT",
+            "FOREIGN_TAX_ID"
+          ]
+        },
+        "countryCode": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "maxLength": 4
+        },
+        "valor": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        }
+      }
+    },
+    "partyFields": {
+      "type": "object",
+      "description": "Las CINCO claves que Padrón honra al escribir (party-service.ts:74-80). Claves desconocidas: el productor las IGNORA hoy; no se declara additionalProperties: false porque no existe ese rechazo (D25).",
+      "properties": {
+        "tipo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nombre_fantasia": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tipo_contribuyente": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tipo_regimen": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "actividades_economicas": {
+          "description": "Libre; Padrón no lo estructura."
+        }
+      }
+    },
+    "partyUpsertRequest": {
+      "type": "object",
+      "description": "Body de POST /padron/v1/parties (parties.ts:33-58). Requiere Idempotency-Key (authn.ts:89-96).",
+      "additionalProperties": false,
+      "required": [
+        "identifier",
+        "razonSocial"
+      ],
+      "properties": {
+        "identifier": {
+          "$ref": "#/$defs/partyIdentifier"
+        },
+        "razonSocial": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 250
+        },
+        "fields": {
+          "$ref": "#/$defs/partyFields"
+        },
+        "roles": {
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "type": "string",
+            "description": "PartyRole — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+            "enum": [
+              "cliente",
+              "proveedor",
+              "cliente_contable",
+              "emisor"
+            ]
+          }
+        }
+      }
+    },
+    "partyRow": {
+      "type": "object",
+      "description": "La fila de Party (db/types.ts:14-28). tipo es string|null: «fisica | juridica» en comentario, sin validación (D19).",
+      "required": [
+        "id",
+        "tenant_id",
+        "tipo",
+        "razon_social",
+        "nombre_fantasia",
+        "tipo_contribuyente",
+        "tipo_regimen",
+        "actividades_economicas",
+        "es_consumidor_final",
+        "entity_version",
+        "deleted_at",
+        "created_at",
+        "updated_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tenant_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tipo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "razon_social": {
+          "type": "string"
+        },
+        "nombre_fantasia": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tipo_contribuyente": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tipo_regimen": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "actividades_economicas": {
+          "description": "Libre o null; Padrón no lo estructura."
+        },
+        "es_consumidor_final": {
+          "type": "boolean"
+        },
+        "entity_version": {
+          "type": "integer"
+        },
+        "deleted_at": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/isoDateTime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "created_at": {
+          "$ref": "#/$defs/isoDateTime"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/isoDateTime"
+        }
+      }
+    },
+    "partyRoleRow": {
+      "type": "object",
+      "description": "db/types.ts:41-49.",
+      "required": [
+        "id",
+        "tenant_id",
+        "party_id",
+        "rol",
+        "activo",
+        "activated_at",
+        "deactivated_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tenant_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "party_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "rol": {
+          "type": "string",
+          "description": "PartyRole — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "cliente",
+            "proveedor",
+            "cliente_contable",
+            "emisor"
+          ]
+        },
+        "activo": {
+          "type": "boolean"
+        },
+        "activated_at": {
+          "$ref": "#/$defs/isoDateTime"
+        },
+        "deactivated_at": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/isoDateTime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "partyContactRow": {
+      "type": "object",
+      "description": "db/types.ts:51-59.",
+      "required": [
+        "id",
+        "tenant_id",
+        "party_id",
+        "tipo",
+        "valor",
+        "principal",
+        "created_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tenant_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "party_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tipo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "valor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "principal": {
+          "type": "boolean"
+        },
+        "created_at": {
+          "$ref": "#/$defs/isoDateTime"
+        }
+      }
+    },
+    "partyBranchRow": {
+      "type": "object",
+      "description": "db/types.ts:61-73.",
+      "required": [
+        "id",
+        "tenant_id",
+        "party_id",
+        "codigo",
+        "nombre",
+        "direccion",
+        "ciudad_id",
+        "tipo",
+        "entity_version",
+        "created_at",
+        "updated_at"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tenant_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "party_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "codigo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nombre": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "direccion": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "ciudad_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "tipo": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "entity_version": {
+          "type": "integer"
+        },
+        "created_at": {
+          "$ref": "#/$defs/isoDateTime"
+        },
+        "updated_at": {
+          "$ref": "#/$defs/isoDateTime"
+        }
+      }
+    },
+    "partyDetailsResponse": {
+      "type": "object",
+      "description": "Body de GET ?identifier= y GET /:id (party-service.ts:43-48).",
+      "required": [
+        "party",
+        "roles",
+        "contacts",
+        "branches"
+      ],
+      "properties": {
+        "party": {
+          "$ref": "#/$defs/partyRow"
+        },
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/partyRoleRow"
+          }
+        },
+        "contacts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/partyContactRow"
+          }
+        },
+        "branches": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/partyBranchRow"
+          }
+        }
+      }
+    },
+    "partyUpsertResponse": {
+      "type": "object",
+      "description": "Body del POST: 201 con created true, 200 con false (parties.ts:113-116).",
+      "required": [
+        "party",
+        "created"
+      ],
+      "properties": {
+        "party": {
+          "$ref": "#/$defs/partyRow"
+        },
+        "created": {
+          "type": "boolean"
+        }
+      }
+    },
+    "partyRolesResponse": {
+      "type": "object",
+      "description": "Body de GET /:id/roles (parties.ts:348-358).",
+      "required": [
+        "roles"
+      ],
+      "properties": {
+        "roles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/partyRoleRow"
+          }
+        }
+      }
+    }
+  }
+}

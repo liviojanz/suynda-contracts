@@ -41,6 +41,17 @@ export const TRUE_UP_MODES = enumsData.TrueUpMode.values;
 /** La NATURALEZA del efecto. REVERSAL no es kind: vive en ConsequenceRole. */
 export const COST_EFFECT_KINDS = enumsData.CostEffectKind.values;
 export const CONSEQUENCE_ROLES = enumsData.ConsequenceRole.values;
+// ── RC-wire (v0.13.0) ───────────────────────────────────────────────────────
+// D28: un tipo TS y un JSON Schema para la misma superficie beben del MISMO
+// conjunto. ModuleKind y CapabilityAvailability eran uniones TS sin fuente
+// material; ahora nacen acá y src/modules.ts / src/capabilities.ts las
+// re-exportan por su path público de siempre. Los tres restantes son el wire
+// de Foundation, verificados cerrados uno por uno (rc-wire-diseno.md §3).
+export const MODULE_KINDS = enumsData.ModuleKind.values;
+export const CAPABILITY_AVAILABILITIES = enumsData.CapabilityAvailability.values;
+export const ENTITLEMENT_STATUSES = enumsData.EntitlementStatus.values;
+export const LAUNCHER_ACTIONS = enumsData.LauncherAction.values;
+export const TOKEN_INITIATORS = enumsData.TokenInitiator.values;
 export const ENUMS = {
     ModuleKey: MODULE_KEYS,
     ModuleClass: MODULE_CLASSES,
@@ -62,5 +73,10 @@ export const ENUMS = {
     TrueUpMode: TRUE_UP_MODES,
     CostEffectKind: COST_EFFECT_KINDS,
     ConsequenceRole: CONSEQUENCE_ROLES,
+    ModuleKind: MODULE_KINDS,
+    CapabilityAvailability: CAPABILITY_AVAILABILITIES,
+    EntitlementStatus: ENTITLEMENT_STATUSES,
+    LauncherAction: LAUNCHER_ACTIONS,
+    TokenInitiator: TOKEN_INITIATORS,
 };
 //# sourceMappingURL=enums.js.map

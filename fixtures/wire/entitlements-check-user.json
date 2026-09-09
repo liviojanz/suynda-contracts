@@ -1,0 +1,30 @@
+{
+  "_schema": "foundation-wire",
+  "_def": "entitlementsCheckResponse",
+  "_source": "foundation/src/http/routes/entitlements.ts:167-179 (response) · src/entitlements/service.ts:90-126 (status/valid_to) · src/member-grants/service.ts:485-489 (functions[]) — token de persona: grants y functions resueltos",
+  "body": {
+    "tenant_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+    "module": "lab",
+    "activo": true,
+    "status": "active",
+    "valid_to": "2027-01-01T00:00:00.000Z",
+    "politica": "FAIL_AFTER_GRACE",
+    "cache_max_seconds": 60,
+    "verificado_at": "2026-09-09T15:00:00.000Z",
+    "grants": ["ver", "cargar"],
+    "functions": [
+      {
+        "function_key": "cargar",
+        "scope_type": "departamento",
+        "scope_refs": ["7b6a5948-3c2d-4e1f-a0b9-c8d7e6f5a4b3"],
+        "all_scopes": false
+      },
+      {
+        "function_key": "ver",
+        "scope_type": null,
+        "scope_refs": [],
+        "all_scopes": true
+      }
+    ]
+  }
+}

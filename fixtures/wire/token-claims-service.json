@@ -1,0 +1,17 @@
+{
+  "_schema": "foundation-wire",
+  "_def": "platformTokenClaims",
+  "_source": "foundation/src/auth/jwt.ts:106-118 — token de servicio: initiator system y la claim capability (jwt.ts:108), string observado (D27)",
+  "body": {
+    "sub": "svc-lab",
+    "iss": "https://suynda.com",
+    "aud": "suynda-services",
+    "iat": 1788000000,
+    "nbf": 1788000000,
+    "exp": 1788000300,
+    "jti": "d1b9123f-6e4a-4c8b-af2d-1a3b4c5d6e7f",
+    "initiator": "system",
+    "tenant_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+    "capability": "entitlements.check"
+  }
+}

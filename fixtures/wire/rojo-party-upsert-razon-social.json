@@ -1,0 +1,10 @@
+{
+  "_schema": "padron-parties",
+  "_def": "partyUpsertRequest",
+  "_source": "ROJO PLANTADO: divergencia C.2 del recon — Lab manda razon_social en snake en la raíz; el productor declara additionalProperties: false (padron parties.ts:33-58) y hoy la descarta en silencio (D25). El schema la rechaza porque el productor lo declara, y además falta razonSocial.",
+  "_expect": "invalid",
+  "body": {
+    "identifier": { "tipo": "RUC", "countryCode": "PY", "valor": "80012345-6" },
+    "razon_social": "Distribuidora del Este S.A."
+  }
+}

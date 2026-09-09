@@ -1,0 +1,8 @@
+{
+  "_schema": "error-envelope",
+  "_def": "errorEnvelope",
+  "_source": "foundation/src/http/server.ts:614-634 — el manejador: { error: { code, message } } con el status del código; el hub lo lee por error.code (src/scripts/equipo.ts:161, 496)",
+  "body": {
+    "error": { "code": "CAPABILITY_DENIED", "message": "No tenés permiso para esta acción" }
+  }
+}

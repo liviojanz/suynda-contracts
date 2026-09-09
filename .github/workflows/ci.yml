@@ -1,0 +1,46 @@
+name: contracts-ci
+
+on:
+  push:
+    # La rama canónica de este repo es `master` (default branch en GitHub).
+    branches: [master]
+    tags: ["v*"]
+  pull_request:
+  workflow_dispatch:
+
+# D22 (9-sep-2026): CI hospedada para contracts. El token NO escribe: este
+# paquete se consume por tag y la CI sólo verifica. La misma compuerta es
+# reproducible localmente con `npm run verify`.
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      # Los enums de los schemas se GENERAN desde data/*.json. Si el árbol
+      # generado difiere de lo commiteado, alguien editó un schema a mano o
+      # subió un dist viejo: el paquete se consume por tag, así que lo
+      # commiteado ES lo que reciben los consumidores.
+      - name: generación y build
+        run: npm run build
+      - name: el árbol generado coincide con el commiteado
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "El build dejó cambios sin commitear:"
+            git status --porcelain
+            git diff
+            exit 1
+          fi
+      - name: verify-v0 (datos y guards)
+        run: node scripts/verify-v0.mjs
+      - name: superficie tipada
+        run: npm run verify:superficie
+      - name: verify-wire (codec, sobre, schemas contra fixtures)
+        run: npm run verify:wire

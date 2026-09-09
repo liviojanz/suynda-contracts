@@ -1,6 +1,6 @@
 {
   "name": "@suynda/contracts",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Shared structural contracts for the Suynda system — enums, modules, events, envelope schema, capabilities, error codes, metered-operation keys. No commercial values.",
   "type": "module",
   "main": "./dist/index.js",
@@ -22,9 +22,10 @@
     "generate:schema": "node scripts/generate-schema.mjs",
     "prebuild": "node scripts/generate-schema.mjs",
     "build": "tsc",
-    "verify": "npm run build && node scripts/verify-v0.mjs && npm run verify:superficie",
+    "verify": "npm run build && node scripts/verify-v0.mjs && npm run verify:superficie && npm run verify:wire",
     "prepublishOnly": "npm run build",
-    "verify:superficie": "tsc --noEmit --module nodenext --moduleResolution nodenext --target es2022 --strict --allowImportingTsExtensions false scripts/verify-superficie.mts && node --experimental-strip-types scripts/verify-superficie.mts"
+    "verify:superficie": "tsc --noEmit --module nodenext --moduleResolution nodenext --target es2022 --strict --allowImportingTsExtensions false scripts/verify-superficie.mts && node --experimental-strip-types scripts/verify-superficie.mts",
+    "verify:wire": "tsc --noEmit --module nodenext --moduleResolution nodenext --target es2022 --strict --allowImportingTsExtensions false scripts/verify-wire.mts && node --experimental-strip-types scripts/verify-wire.mts"
   },
   "engines": {
     "node": ">=18"

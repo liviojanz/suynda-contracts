@@ -1,0 +1,7 @@
+{
+  "_schema": "error-envelope",
+  "_def": "errorEnvelope",
+  "_source": "ROJO PLANTADO: el { detail } de FastAPI que responde compra (facturas-py backend/core/auth.py:61, 112, 134) NO es el sobre de la plataforma. Si esto pasa, el schema del sobre no exige error.",
+  "_expect": "invalid",
+  "body": { "detail": "Sesión requerida" }
+}

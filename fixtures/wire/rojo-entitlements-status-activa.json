@@ -1,0 +1,18 @@
+{
+  "_schema": "foundation-wire",
+  "_def": "entitlementsCheckResponse",
+  "_source": "ROJO PLANTADO (rc-wire-diseno.md §7.1): status «activa» no está en EntitlementStatus (foundation/src/entitlements/service.ts:23-28). Si esto pasa, el enum inyectado quedó vacío o laxo.",
+  "_expect": "invalid",
+  "body": {
+    "tenant_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+    "module": "lab",
+    "activo": true,
+    "status": "activa",
+    "valid_to": null,
+    "politica": "FAIL_AFTER_GRACE",
+    "cache_max_seconds": 60,
+    "verificado_at": "2026-09-09T15:00:00.000Z",
+    "grants": [],
+    "functions": []
+  }
+}

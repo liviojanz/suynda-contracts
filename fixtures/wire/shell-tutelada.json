@@ -1,0 +1,15 @@
+{
+  "_schema": "foundation-wire",
+  "_def": "shellResponse",
+  "_source": "foundation/src/shell/shell-service.ts:172-212 — espacio tutelado: balance en null (el productor lo declara | null; el hub lo tipa no-nulo, divergencia del recon fila 5) y branding cargado",
+  "body": {
+    "user": { "id": "6f1c2a44-9b1e-4a0a-8b2e-2f3d4c5e6a7b", "nombre": "Contadora" },
+    "tenant": { "id": "2b3c4d5e-6f7a-4b8c-9d0e-1f2a3b4c5d6e", "razon_social": "Lucero S.A.", "nombre_negocio": "Lucero" },
+    "launcher": [
+      { "key": "nucleo", "nombre": "Núcleo", "descripcion": "Contabilidad", "nivel": 2, "entitled": true, "action": "open", "kind": "horizontal", "url": "https://nucleo.suynda.com" }
+    ],
+    "balance": null,
+    "branding": { "logo_url": "https://cdn.suynda.com/l/lucero.png", "color_primario": "#0a4d68", "color_acento": "#f2a900" },
+    "platform": { "hub_url": "https://suynda.com/panel" }
+  }
+}

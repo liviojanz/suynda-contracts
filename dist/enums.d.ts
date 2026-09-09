@@ -56,6 +56,16 @@ export declare const COST_EFFECT_KINDS: string[];
 export type CostEffectKind = (typeof COST_EFFECT_KINDS)[number];
 export declare const CONSEQUENCE_ROLES: string[];
 export type ConsequenceRole = (typeof CONSEQUENCE_ROLES)[number];
+export declare const MODULE_KINDS: string[];
+export type ModuleKind = (typeof MODULE_KINDS)[number];
+export declare const CAPABILITY_AVAILABILITIES: string[];
+export type CapabilityAvailability = (typeof CAPABILITY_AVAILABILITIES)[number];
+export declare const ENTITLEMENT_STATUSES: string[];
+export type EntitlementStatus = (typeof ENTITLEMENT_STATUSES)[number];
+export declare const LAUNCHER_ACTIONS: string[];
+export type LauncherAction = (typeof LAUNCHER_ACTIONS)[number];
+export declare const TOKEN_INITIATORS: string[];
+export type TokenInitiator = (typeof TOKEN_INITIATORS)[number];
 export declare const ENUMS: {
     readonly ModuleKey: string[];
     readonly ModuleClass: string[];
@@ -77,5 +87,10 @@ export declare const ENUMS: {
     readonly TrueUpMode: string[];
     readonly CostEffectKind: string[];
     readonly ConsequenceRole: string[];
+    readonly ModuleKind: string[];
+    readonly CapabilityAvailability: string[];
+    readonly EntitlementStatus: string[];
+    readonly LauncherAction: string[];
+    readonly TokenInitiator: string[];
 };
 //# sourceMappingURL=enums.d.ts.map

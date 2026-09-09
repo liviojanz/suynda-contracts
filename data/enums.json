@@ -119,5 +119,30 @@
     "_status": "PROPUESTO",
     "_note": "Source: SUYNDA-DEPOSITO-DOMAIN-v1.0-FROZEN · DEP-31, DEP-04, C-4. El rol de una consecuencia dentro de su identidad económica: ORIGINAL la primera exposición; REVERSAL la reversa (C-4, referencia a la original, mismo kind, monto inverso); REEXPOSURE la re-exposición versionada tras una revaluación en cascada (D-4) — mismo operation_id, version+1, mismo kind. El rol cambia versión y signo; JAMÁS la naturaleza (CostEffectKind) del efecto.",
     "values": ["ORIGINAL", "REVERSAL", "REEXPOSURE"]
+  },
+  "ModuleKind": {
+    "_status": "PROPUESTO",
+    "_note": "RC-wire v0.13.0 (D28): antes era un tipo TS en src/modules.ts sin fuente material; se promueve acá para que TypeScript y JSON Schema beban del MISMO conjunto. vertical = gestión de UN tipo de negocio (lab, vet, taller, milk, farm, comercio); horizontal = administración general (compra, deposito, factura, nucleo, talento, visibilidad, conecta). Sólo para clase comercial; plataforma lleva null en modules.json (guard bidireccional en verify-v0.mjs).",
+    "values": ["vertical", "horizontal"]
+  },
+  "CapabilityAvailability": {
+    "_status": "PROPUESTO",
+    "_note": "RC-wire v0.13.0 (D28): antes era un tipo TS en src/capabilities.ts sin fuente material. Es la política de disponibilidad de una capability (data/capabilities.json) y viaja como `politica` en GET /v1/entitlements/check (foundation http/routes/entitlements.ts:175).",
+    "values": ["FAIL_OPEN", "FAIL_AFTER_GRACE", "FAIL_CLOSED"]
+  },
+  "EntitlementStatus": {
+    "_status": "PROPUESTO",
+    "_note": "RC-wire v0.13.0. Source: foundation entitlements/service.ts:23-28. Cerrado por construcción: unión TS y todas las emisiones son literales (:101, :111-113, :119, :125-126). plataforma, ausente y vencido NO son valores de la columna entitlements.status: son distinciones para el cliente (:18-22). compra lo lee por texto (facturas-py backend/core/auth.py:636-637).",
+    "values": ["active", "suspended", "vencido", "ausente", "plataforma"]
+  },
+  "LauncherAction": {
+    "_status": "PROPUESTO",
+    "_note": "RC-wire v0.13.0. Source: foundation shell/shell-service.ts:15; única emisión :190 (entitled ? open : expand). Redundante con entitled y aun así viaja: se declara tal cual (D20).",
+    "values": ["open", "expand"]
+  },
+  "TokenInitiator": {
+    "_status": "PROPUESTO",
+    "_note": "RC-wire v0.13.0. Source: foundation auth/jwt.ts:16. Validado en las DOS puntas: Foundation rechaza otro valor al leer (jwt.ts:138-141) y Padrón también (token-verifier.ts:71-73). Es el subconjunto de CapabilityInitiator sin `both`: un token nunca es `both`.",
+    "values": ["user", "system"]
   }
 }

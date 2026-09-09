@@ -50,8 +50,14 @@ console.log(
 const enumsPath = join(root, "data", "enums.json");
 const enums = await readJson(enumsPath);
 
-const valuesOf = (key) =>
-  key === "ModuleKey" ? moduleEnum : enums[key].values;
+// RC-wire v0.13.0: los enums "planos" de data/enums.json (IdentifierType,
+// PartyRole, ModuleLevel…) son arreglos sin `values`; los anotados lo traen.
+const valuesOf = (key) => {
+  if (key === "ModuleKey") return moduleEnum;
+  const raw = enums[key];
+  if (raw === undefined) throw new Error(`generate-schema: enum ${key} no existe en data/enums.json`);
+  return Array.isArray(raw) ? raw : raw.values;
+};
 
 const INJECTIONS = {
   "economic-consequence.schema.json": [
@@ -68,6 +74,24 @@ const INJECTIONS = {
     { path: ["$defs", "causalIdentity", "properties", "origen_module"], key: "ModuleKey", nullable: false, source: "data/modules.json" },
     { path: ["$defs", "inventoryProvocation", "properties", "operation_type"], key: "InventoryOperationType", nullable: false },
   ],
+  // ── RC-wire (v0.13.0): el wire de Foundation y Padrón. D28: TypeScript y
+  // JSON Schema beben del MISMO conjunto — por eso ModuleKind y
+  // CapabilityAvailability se promovieron a data/enums.json en vez de copiarse.
+  "foundation-wire.schema.json": [
+    { path: ["$defs", "platformTokenClaims", "properties", "initiator"], key: "TokenInitiator", nullable: false },
+    { path: ["$defs", "entitlementsCheckResponse", "properties", "module"], key: "ModuleKey", nullable: false, source: "data/modules.json" },
+    { path: ["$defs", "entitlementsCheckResponse", "properties", "status"], key: "EntitlementStatus", nullable: false },
+    { path: ["$defs", "entitlementsCheckResponse", "properties", "politica"], key: "CapabilityAvailability", nullable: false },
+    { path: ["$defs", "shellLauncherItem", "properties", "key"], key: "ModuleKey", nullable: false, source: "data/modules.json" },
+    { path: ["$defs", "shellLauncherItem", "properties", "nivel"], key: "ModuleLevel", nullable: false },
+    { path: ["$defs", "shellLauncherItem", "properties", "action"], key: "LauncherAction", nullable: false },
+    { path: ["$defs", "shellLauncherItem", "properties", "kind"], key: "ModuleKind", nullable: true },
+  ],
+  "padron-parties.schema.json": [
+    { path: ["$defs", "partyIdentifier", "properties", "tipo"], key: "IdentifierType", nullable: false },
+    { path: ["$defs", "partyUpsertRequest", "properties", "roles", "items"], key: "PartyRole", nullable: false },
+    { path: ["$defs", "partyRoleRow", "properties", "rol"], key: "PartyRole", nullable: false },
+  ],
 };
 
 for (const [file, injections] of Object.entries(INJECTIONS)) {
@@ -81,9 +105,16 @@ for (const [file, injections] of Object.entries(INJECTIONS)) {
     const tail = node.description.includes(" Do not edit by hand.")
       ? node.description.slice(node.description.indexOf(" Do not edit by hand.") + " Do not edit by hand.".length)
       : "";
-    node.description = `${inj.key}${inj.nullable ? " | null" : ""} — ${GEN} ${src} by scripts/generate-schema.mjs. Do not edit by hand.${tail}`;
-    node.enum = inj.nullable ? [...values, null] : [...values];
-    node.type = inj.nullable ? ["string", "null"] : "string";
+    // RC-wire v0.13.0: un enum puede traer valores numéricos (ModuleLevel) o
+    // incluir null en su propia lista; el tipo se DERIVA de los valores. Para
+    // los enums de Depósito —strings sin null— la salida es idéntica byte a
+    // byte a la de antes.
+    const nonNull = values.filter((v) => v !== null);
+    const hasNull = Boolean(inj.nullable) || nonNull.length !== values.length;
+    const base = typeof nonNull[0] === "number" ? "integer" : "string";
+    node.description = `${inj.key}${hasNull ? " | null" : ""} — ${GEN} ${src} by scripts/generate-schema.mjs. Do not edit by hand.${tail}`;
+    node.enum = hasNull ? [...nonNull, null] : [...nonNull];
+    node.type = hasNull ? [base, "null"] : base;
     done.push(`${inj.path.at(-1)}=${values.length}`);
   }
   await writeFile(p, JSON.stringify(s, null, 2) + "\n", "utf8");

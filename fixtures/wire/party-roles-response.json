@@ -1,0 +1,18 @@
+{
+  "_schema": "padron-parties",
+  "_def": "partyRolesResponse",
+  "_source": "padron/src/http/routes/parties.ts:281-358 — GET /padron/v1/parties/:id/roles → { roles: PartyRoleRow[] }",
+  "body": {
+    "roles": [
+      {
+        "id": "4d5e6f7a-8b9c-4d0e-9f1a-2b3c4d5e6f7a",
+        "tenant_id": "1a2b3c4d-5e6f-4a7b-8c9d-0e1f2a3b4c5d",
+        "party_id": "3c4d5e6f-7a8b-4c9d-8e0f-1a2b3c4d5e6f",
+        "rol": "cliente",
+        "activo": false,
+        "activated_at": "2026-09-01T15:00:00.000Z",
+        "deactivated_at": "2026-09-09T15:00:00.000Z"
+      }
+    ]
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "_schema": "foundation-wire",
+  "_def": "platformTokenClaims",
+  "_source": "ROJO PLANTADO (rc-wire-diseno.md §7.1): initiator «bot» no es TokenInitiator (foundation/src/auth/jwt.ts:16; rechazado al leer en jwt.ts:138-141 y en padron token-verifier.ts:71-73).",
+  "_expect": "invalid",
+  "body": {
+    "sub": "x",
+    "iss": "https://suynda.com",
+    "aud": "suynda-users",
+    "iat": 1,
+    "nbf": 1,
+    "exp": 2,
+    "jti": "j",
+    "initiator": "bot"
+  }
+}

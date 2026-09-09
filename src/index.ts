@@ -27,6 +27,11 @@ export {
   TRUE_UP_MODES,
   COST_EFFECT_KINDS,
   CONSEQUENCE_ROLES,
+  MODULE_KINDS,
+  CAPABILITY_AVAILABILITIES,
+  ENTITLEMENT_STATUSES,
+  LAUNCHER_ACTIONS,
+  TOKEN_INITIATORS,
   ENUMS,
   type ModuleKey,
   type ModuleClass,
@@ -48,6 +53,9 @@ export {
   type TrueUpMode,
   type CostEffectKind,
   type ConsequenceRole,
+  type EntitlementStatus,
+  type LauncherAction,
+  type TokenInitiator,
 } from "./enums.js";
 
 export {
@@ -123,3 +131,56 @@ export {
   type ProvocationLine,
   type InventoryProvocation,
 } from "./deposito.js";
+
+// ── RC-wire (v0.13.0): el wire de los servicios compartidos de plataforma ────
+// Foundation y Padrón (D21). NO es precedente para las APIs de un módulo.
+
+export {
+  FOUNDATION_JWKS_USERS_PATH,
+  FOUNDATION_JWKS_SERVICES_PATH,
+  FOUNDATION_ENTITLEMENTS_CHECK_PATH,
+  FOUNDATION_ENTITLEMENTS_CHECK_MODULE_QUERY,
+  FOUNDATION_SHELL_PATH,
+  PLATFORM_JWT_ALG,
+  type PlatformJwk,
+  type PlatformJwks,
+  type PlatformTokenHeader,
+  type PlatformTokenClaims,
+  type EntitlementsCheckQuery,
+  type ResolvedFunctionAccess,
+  type EntitlementsCheckResponse,
+  type ShellUser,
+  type ShellTenant,
+  type ShellLauncherItem,
+  type ShellBalance,
+  type ShellBranding,
+  type ShellPlatform,
+  type ShellResponse,
+} from "./foundation.js";
+
+export {
+  PADRON_PARTIES_PATH,
+  PADRON_PARTIES_IDENTIFIER_QUERY,
+  padronPartyPath,
+  padronPartyRolesPath,
+  IDEMPOTENCY_KEY_HEADER,
+  IDEMPOTENCY_REPLAYED_HEADER,
+  PARTY_IDENTIFIER_SEPARATOR,
+  isIdentifierType,
+  parsePartyIdentifier,
+  formatPartyIdentifier,
+  isPartyIdentifierString,
+  type PartyIdentifier,
+  type ParsePartyIdentifierResult,
+  type PartyFields,
+  type PartyUpsertRequest,
+  type PartyRow,
+  type PartyRoleRow,
+  type PartyContactRow,
+  type PartyBranchRow,
+  type PartyDetailsResponse,
+  type PartyUpsertResponse,
+  type PartyRolesResponse,
+} from "./padron.js";
+
+export { isErrorEnvelope, type ErrorEnvelope } from "./error-envelope.js";

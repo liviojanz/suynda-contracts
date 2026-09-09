@@ -1,0 +1,520 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://suynda.com/schemas/foundation-wire.schema.json",
+  "title": "Suynda Foundation — el wire de plataforma (JWKS, JWT, entitlements, shell)",
+  "description": "RC-wire (v0.13.0). Forma documentada de lo que Foundation SIRVE, tal cual viaja (D13, D20). Los enums de este schema se GENERAN desde data/enums.json y data/modules.json por scripts/generate-schema.mjs — no editar a mano. Las respuestas son ABIERTAS (sin additionalProperties: false): un consumidor tolera campos nuevos del productor; lo que no se declara acá no está garantizado. Ownership D21: Foundation es servicio compartido de plataforma; esto NO es precedente para las APIs de un módulo. Source: foundation/src/http/routes/jwks.ts · auth/keys.ts · auth/jwt.ts · http/routes/entitlements.ts:167-179 · shell/shell-service.ts:15-87.",
+  "$defs": {
+    "isoDateTime": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 serializable por JSON (D16). No se congela precisión ni fracciones."
+    },
+    "platformJwk": {
+      "type": "object",
+      "description": "Una clave pública Ed25519 publicada por Foundation (keys.ts:91-93).",
+      "required": [
+        "kty",
+        "crv",
+        "x",
+        "kid",
+        "alg",
+        "use"
+      ],
+      "properties": {
+        "kty": {
+          "const": "OKP"
+        },
+        "crv": {
+          "const": "Ed25519"
+        },
+        "x": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Clave pública, base64url."
+        },
+        "kid": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Thumbprint JWK."
+        },
+        "alg": {
+          "const": "Ed25519",
+          "description": "Nombre jose v6, no EdDSA."
+        },
+        "use": {
+          "const": "sig"
+        }
+      }
+    },
+    "platformJwks": {
+      "type": "object",
+      "description": "GET /.well-known/jwks-users.json y jwks-services.json (jwks.ts:14-22).",
+      "required": [
+        "keys"
+      ],
+      "properties": {
+        "keys": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/platformJwk"
+          }
+        }
+      }
+    },
+    "platformTokenClaims": {
+      "type": "object",
+      "description": "Las claims tal cual viajan (jwt.ts:106-118; session.ts:193, 291). Nombres mezclados a propósito (D13): sin alias.",
+      "required": [
+        "sub",
+        "iss",
+        "aud",
+        "iat",
+        "nbf",
+        "exp",
+        "jti",
+        "initiator"
+      ],
+      "properties": {
+        "sub": {
+          "type": "string",
+          "minLength": 1
+        },
+        "iss": {
+          "type": "string",
+          "minLength": 1
+        },
+        "aud": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Foundation emite string, no arreglo."
+        },
+        "iat": {
+          "type": "integer"
+        },
+        "nbf": {
+          "type": "integer"
+        },
+        "exp": {
+          "type": "integer"
+        },
+        "jti": {
+          "type": "string",
+          "minLength": 1
+        },
+        "initiator": {
+          "type": "string",
+          "description": "TokenInitiator — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "user",
+            "system"
+          ]
+        },
+        "tenant_id": {
+          "type": "string",
+          "description": "Ausente = sin espacio activo."
+        },
+        "capability": {
+          "type": "string",
+          "description": "Sólo tokens de servicio. String tal cual se firma (D27)."
+        },
+        "mandateId": {
+          "type": "string",
+          "description": "Sesión prestada por mandato."
+        },
+        "tutelaId": {
+          "type": "string",
+          "description": "Sesión prestada por tutela."
+        }
+      }
+    },
+    "resolvedFunctionAccess": {
+      "type": "object",
+      "description": "Un ítem de functions[] (member-grants/service.ts:485-489). scope_type es OPACO (D18).",
+      "required": [
+        "function_key",
+        "scope_type",
+        "scope_refs",
+        "all_scopes"
+      ],
+      "properties": {
+        "function_key": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope_type": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "scope_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "all_scopes": {
+          "type": "boolean"
+        }
+      }
+    },
+    "entitlementsCheckResponse": {
+      "type": "object",
+      "description": "GET /v1/entitlements/check?module= (entitlements.ts:167-179). grants y functions son null para un token de servicio.",
+      "required": [
+        "tenant_id",
+        "module",
+        "activo",
+        "status",
+        "valid_to",
+        "politica",
+        "cache_max_seconds",
+        "verificado_at",
+        "grants",
+        "functions"
+      ],
+      "properties": {
+        "tenant_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "module": {
+          "type": "string",
+          "description": "ModuleKey — GENERATED from data/modules.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "foundation",
+            "padron",
+            "factura",
+            "deposito",
+            "nucleo",
+            "compra",
+            "talento",
+            "visibilidad",
+            "conecta",
+            "lab",
+            "vet",
+            "taller",
+            "milk",
+            "farm",
+            "comercio"
+          ]
+        },
+        "activo": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "string",
+          "description": "EntitlementStatus — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "active",
+            "suspended",
+            "vencido",
+            "ausente",
+            "plataforma"
+          ]
+        },
+        "valid_to": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/isoDateTime"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "politica": {
+          "type": "string",
+          "description": "CapabilityAvailability — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "FAIL_OPEN",
+            "FAIL_AFTER_GRACE",
+            "FAIL_CLOSED"
+          ]
+        },
+        "cache_max_seconds": {
+          "type": "number"
+        },
+        "verificado_at": {
+          "$ref": "#/$defs/isoDateTime"
+        },
+        "grants": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "type": "string"
+          }
+        },
+        "functions": {
+          "type": [
+            "array",
+            "null"
+          ],
+          "items": {
+            "$ref": "#/$defs/resolvedFunctionAccess"
+          }
+        }
+      }
+    },
+    "shellUser": {
+      "type": "object",
+      "required": [
+        "id",
+        "nombre"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nombre": {
+          "type": "string"
+        }
+      }
+    },
+    "shellTenant": {
+      "type": "object",
+      "description": "nombre_negocio es el rótulo para mostrar y nunca es null; razon_social es la identidad legal y puede serlo (shell-service.ts:47-53).",
+      "required": [
+        "id",
+        "razon_social",
+        "nombre_negocio"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "razon_social": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "nombre_negocio": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "shellLauncherItem": {
+      "type": "object",
+      "description": "Un módulo comercial en el launcher (shell-service.ts:16-42, 181-194).",
+      "required": [
+        "key",
+        "nombre",
+        "descripcion",
+        "nivel",
+        "entitled",
+        "action",
+        "kind",
+        "url"
+      ],
+      "properties": {
+        "key": {
+          "type": "string",
+          "description": "ModuleKey — GENERATED from data/modules.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "foundation",
+            "padron",
+            "factura",
+            "deposito",
+            "nucleo",
+            "compra",
+            "talento",
+            "visibilidad",
+            "conecta",
+            "lab",
+            "vet",
+            "taller",
+            "milk",
+            "farm",
+            "comercio"
+          ]
+        },
+        "nombre": {
+          "type": "string"
+        },
+        "descripcion": {
+          "type": "string"
+        },
+        "nivel": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "ModuleLevel | null — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            1,
+            2,
+            null
+          ]
+        },
+        "entitled": {
+          "type": "boolean"
+        },
+        "action": {
+          "type": "string",
+          "description": "LauncherAction — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "open",
+            "expand"
+          ]
+        },
+        "kind": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "ModuleKind | null — GENERATED from data/enums.json by scripts/generate-schema.mjs. Do not edit by hand.",
+          "enum": [
+            "vertical",
+            "horizontal",
+            null
+          ]
+        },
+        "url": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "null = «Pronto», sin destino desplegado."
+        }
+      }
+    },
+    "shellBalance": {
+      "type": "object",
+      "description": "Créditos, no dinero (credits-service.ts:68-74).",
+      "required": [
+        "saldo",
+        "en_sobregiro",
+        "bajo",
+        "gracia_restante"
+      ],
+      "properties": {
+        "saldo": {
+          "type": "number"
+        },
+        "en_sobregiro": {
+          "type": "boolean"
+        },
+        "bajo": {
+          "type": "boolean"
+        },
+        "gracia_restante": {
+          "oneOf": [
+            {
+              "type": "object",
+              "required": [
+                "operaciones",
+                "dias"
+              ],
+              "properties": {
+                "operaciones": {
+                  "type": "number"
+                },
+                "dias": {
+                  "type": "number"
+                }
+              }
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      }
+    },
+    "shellBranding": {
+      "type": "object",
+      "required": [
+        "logo_url",
+        "color_primario",
+        "color_acento"
+      ],
+      "properties": {
+        "logo_url": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "color_primario": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "color_acento": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "shellPlatform": {
+      "type": "object",
+      "required": [
+        "hub_url"
+      ],
+      "properties": {
+        "hub_url": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "shellResponse": {
+      "type": "object",
+      "description": "GET /v1/shell (shell-service.ts:50-87, 195-213). tenant null sin membresía ni sesión prestada; balance null sin bolsillo (tutelada).",
+      "required": [
+        "user",
+        "tenant",
+        "launcher",
+        "balance",
+        "branding",
+        "platform"
+      ],
+      "properties": {
+        "user": {
+          "$ref": "#/$defs/shellUser"
+        },
+        "tenant": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/shellTenant"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "launcher": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/shellLauncherItem"
+          }
+        },
+        "balance": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/shellBalance"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "branding": {
+          "$ref": "#/$defs/shellBranding"
+        },
+        "platform": {
+          "$ref": "#/$defs/shellPlatform"
+        }
+      }
+    }
+  }
+}

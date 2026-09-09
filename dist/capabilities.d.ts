@@ -2,7 +2,8 @@
  * Capability registry — shape LOCKED; rows PROPUESTO (security pass will firm).
  * Canonical: data/capabilities.json.
  */
-export type CapabilityAvailability = "FAIL_OPEN" | "FAIL_AFTER_GRACE" | "FAIL_CLOSED";
+export type { CapabilityAvailability } from "./enums.js";
+import type { CapabilityAvailability } from "./enums.js";
 export type CapabilityInitiator = "user" | "system" | "both";
 export interface Capability {
     key: string;

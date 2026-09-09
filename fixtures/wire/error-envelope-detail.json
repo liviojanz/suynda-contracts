@@ -1,0 +1,13 @@
+{
+  "_schema": "error-envelope",
+  "_def": "errorEnvelope",
+  "_source": "padron/src/http/server.ts:78-96 · src/http/errors.ts:22-24 — el sobre con detail libre (D23); un code local del productor viaja en el mismo sobre (D24); el sobre es extensible",
+  "body": {
+    "error": {
+      "code": "PARTY_IDENTIFIER_INVALID",
+      "message": "El identificador no tiene la forma TIPO:PAIS:VALOR",
+      "detail": { "identifier": "RUC:PY" }
+    },
+    "requestId": "req-01J9"
+  }
+}

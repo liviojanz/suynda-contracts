@@ -1,0 +1,1 @@
+{"version":3,"file":"error-envelope.d.ts","sourceRoot":"","sources":["../src/error-envelope.ts"],"names":[],"mappings":"AAAA;;;;;;;;;;;;;;GAcG;AAEH,MAAM,WAAW,aAAa;IAC5B,KAAK,EAAE;QACL,IAAI,EAAE,MAAM,CAAC;QACb,OAAO,EAAE,MAAM,CAAC;QAChB,MAAM,CAAC,EAAE,OAAO,CAAC;KAClB,CAAC;CACH;AAED;;;GAGG;AACH,wBAAgB,eAAe,CAAC,KAAK,EAAE,OAAO,GAAG,KAAK,IAAI,aAAa,CAMtE"}

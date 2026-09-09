@@ -17,7 +17,8 @@ import type { ModuleClass, ModuleKey, ModuleLevel } from "./enums.js";
  * siempre encendida (`plataforma`). `kind` dice que clase de negocio resuelve.
  * Son preguntas distintas y por eso son dos campos.
  */
-export type ModuleKind = "vertical" | "horizontal";
+export type { ModuleKind } from "./enums.js";
+import type { ModuleKind } from "./enums.js";
 export interface ModuleSeed {
     key: ModuleKey;
     clase: ModuleClass;

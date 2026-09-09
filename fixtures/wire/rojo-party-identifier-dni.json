@@ -1,0 +1,7 @@
+{
+  "_schema": "padron-parties",
+  "_def": "partyIdentifier",
+  "_source": "ROJO PLANTADO: divergencia C.8 del recon — Padrón acepta cualquier string ≤ 20 como tipo (parties.ts:44-47, 327); contracts declara IdentifierType (D26) y «DNI» no está. C.8 se cierra cuando Padrón adopte.",
+  "_expect": "invalid",
+  "body": { "tipo": "DNI", "countryCode": "AR", "valor": "12345678" }
+}
