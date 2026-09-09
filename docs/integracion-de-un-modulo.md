@@ -308,8 +308,20 @@ servidor.
 
 ## 6-bis. TODO MÓDULO NACE EN MODO PILOTO
 
-**Decisión del fundador, 6-sep-2026.** El candado que Lab tenía como suyo deja de ser
-particular: **es pieza estándar, y cada módulo la trae de fábrica.**
+**Decisión del fundador, 6-sep-2026 — ENMENDADA el 9-sep-2026** (recon de extracción de
+`@suynda/modulo`, D1). El candado que Lab tenía como suyo deja de ser particular. Pero **no es
+identidad permanente del módulo: es infraestructura de rollout.** Desde ACT-1a la plataforma ya
+tiene dos interruptores por tenant que no existían cuando Lab nació —el entitlement, que un
+Responsable activa y desactiva desde el hub, y la regla de qué se ofrece—; lo que el candado
+agrega es la protección **mientras un módulo ya es activable por cualquier Responsable y todavía
+no está listo para todos**, sin depender de que Foundation esté arriba.
+
+**Tres dueños, en orden:** `@suynda/modulo` **la ofrece** como etapa opcional de la autorización,
+con tres estados —cerrado, lista, abierto—; **el starter nace con ella encendida y fail-closed**;
+**Foundation la absorbe cuando se resuelva P11** (un estado de piloto del módulo con sus tenants,
+que además haga que el hub muestre «Pronto» y que activar rechace), y entonces la etapa del
+paquete se retira en un tag. La variable se llama **`MODULE_ROLLOUT_TENANTS`** (D5);
+`PILOT_TENANT_IDS` de Lab migra a ese nombre en Fase 2.
 
 ### El ciclo de vida, en tres etapas
 
@@ -330,25 +342,29 @@ particular: **es pieza estándar, y cada módulo la trae de fábrica.**
 > env** — un descuido de configuración indistinguible de una decisión. Con un
 > valor explícito, abrir es algo que alguien escribió.
 
-### Lo que el módulo trae de fábrica
+### Lo que el starter trae encendido, y quién es dueño de cada parte
 
-El patrón probado es el de Lab, y viaja entero:
+El patrón probado es el de Lab. Viaja entero, pero **repartido** (enmienda del 9-sep, D1 y D2):
 
 1. **El candado**: la lista se evalúa **ADEMÁS** del entitlement, nunca en su lugar,
    y sin red — no depende de que Foundation esté arriba
-   (`lab/src/platform/lab-context.ts:36-46,72`).
+   (`lab/src/platform/lab-context.ts:36-46,72`). **Lo ofrece `@suynda/modulo`; lo enciende
+   el starter.**
 2. **La denegación honesta (B.2-21)**, que es la mitad que suele faltar. Un candado
    sin pantalla es un 403 crudo. La pantalla dice **la causa** y ofrece **sólo las
    salidas que sirven**: si el espacio no tiene el módulo, activar y volver; si es el
    candado o las facultades, **sólo volver** — ofrecer activar ahí es mentir, porque
-   activar no lo dejaría entrar igual.
+   activar no lo dejaría entrar igual. **La decisión** —qué causa, y si activar cambiaría
+   algo— es de **`@suynda/modulo`**; **la pieza completa** —markup, las dos causas, las
+   salidas y el copy con `{modulo}` como parámetro— es de **`@suynda/ui`**; **el render** es
+   del starter. Ningún módulo escribe su propia pantalla de denegación.
 3. **Las salidas NO dependen del marco.** El origen del hub se resuelve en el
    **servidor**, desde una variable requerida. Quien fue rechazado es exactamente
    quien no puede pedir el marco: el BFF del propio módulo corre el mismo guard y le
    contesta 403. *(Se descubrió en producción el 6-sep; ver `corrida-act-1a-fix-diseno.md`.)*
 
-**Alcance:** entra a **`@suynda/modulo`** (Fase 2), con su denegación incluida. Hasta
-que el paquete exista, cada módulo lo calca del de Lab.
+**Alcance:** paquete, ui y starter en Fase 2 — ver
+`suynda-modulo/docs/design/recon.md`, D1 y D2. Hasta que existan, cada módulo lo calca del de Lab.
 
 ---
 
