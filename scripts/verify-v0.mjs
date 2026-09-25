@@ -18,6 +18,7 @@ import {
   COMPRA_MANIFEST,
   LAB_MANIFEST,
   DEPOSITO_MANIFEST,
+  VISIBILIDAD_MANIFEST,
   MANIFESTS,
   manifestByModuleKey,
 } from "../dist/index.js";
@@ -347,6 +348,83 @@ function verifyDepositoManifest(m) {
   return errors;
 }
 
+/**
+ * Las firmas congeladas del manifiesto visibilidad (PE-VIS-1) — que no
+ * derritan en silencio. Patrón Lab: roles [], acceso 100 % por tildes. Sin
+ * scope en NINGUNA función: el canal (Instagram/LinkedIn/…) es atributo de la
+ * variante, no dimensión autorizativa. Sólo `ver` es delegable. Los presets
+ * son UX: la matriz exacta está acá para que un cambio de preset sea un acto
+ * deliberado, no un derrame.
+ */
+function verifyVisibilidadManifest(m) {
+  const errors = [];
+  if (m.module_key !== "visibilidad") {
+    errors.push(`visibilidad manifest module_key must be visibilidad; got ${m.module_key}`);
+  }
+  if (m.manifest_version !== 1) {
+    errors.push(`visibilidad manifest_version must be 1; got ${m.manifest_version}`);
+  }
+  if (m.roles.length !== 0) {
+    errors.push("visibilidad roles must be [] (patrón Lab: acceso 100% por tildes)");
+  }
+  if (Object.keys(m.role_grant_matrix).length !== 0) {
+    errors.push("visibilidad role_grant_matrix must be {}");
+  }
+  if (m.mandate_types.length !== 0) {
+    errors.push("visibilidad mandate_types must be [] in V1");
+  }
+
+  const FUNCIONES = [
+    "ver",
+    "gestionar_marca",
+    "gestionar_campanas",
+    "gestionar_conocimiento",
+    "gestionar_contenido",
+    "aprobar_contenido",
+  ];
+  const keys = m.functions.map((f) => f.function_key);
+  if (JSON.stringify(keys) !== JSON.stringify(FUNCIONES)) {
+    errors.push(
+      `visibilidad functions must be exactly ${JSON.stringify(FUNCIONES)} in that order; got ${JSON.stringify(keys)}`,
+    );
+  }
+  for (const f of m.functions) {
+    if (f.scope_type !== undefined && f.scope_type !== null) {
+      errors.push(`visibilidad ${f.function_key} must be unscoped; got ${f.scope_type}`);
+    }
+    if (f.autorizada_por_canal !== false) {
+      errors.push(`visibilidad ${f.function_key} must have autorizada_por_canal: false`);
+    }
+    const delegableEsperado = f.function_key === "ver";
+    if (f.delegable !== delegableEsperado) {
+      errors.push(`visibilidad ${f.function_key} must be delegable: ${delegableEsperado}`);
+    }
+  }
+
+  const MATRIZ = {
+    marca: ["ver", "gestionar_marca"],
+    creacion: ["ver", "gestionar_campanas", "gestionar_conocimiento", "gestionar_contenido"],
+    aprobacion: ["ver", "aprobar_contenido"],
+    gestion_completa: FUNCIONES,
+  };
+  const presets = m.permission_presets ?? [];
+  if (!sameSet(presets.map((p) => p.preset_key), Object.keys(MATRIZ))) {
+    errors.push(
+      `visibilidad presets must be exactly ${JSON.stringify(Object.keys(MATRIZ))}; got ${JSON.stringify(sorted(presets.map((p) => p.preset_key)))}`,
+    );
+  }
+  for (const p of presets) {
+    const expected = MATRIZ[p.preset_key];
+    if (expected && !sameSet(p.functions, expected)) {
+      errors.push(
+        `visibilidad preset ${p.preset_key} must be ${JSON.stringify(expected)}; got ${JSON.stringify(sorted(p.functions))}`,
+      );
+    }
+  }
+
+  return errors;
+}
+
 function walk(dir) {
   const out = [];
   for (const e of readdirSync(dir, { withFileTypes: true })) {
@@ -514,12 +592,16 @@ console.log("lab manifest checks:", labErrors.length === 0 ? "ok" : labErrors);
 const depositoErrors = verifyDepositoManifest(DEPOSITO_MANIFEST);
 console.log("deposito manifest checks:", depositoErrors.length === 0 ? "ok" : depositoErrors);
 
+const visibilidadErrors = verifyVisibilidadManifest(VISIBILIDAD_MANIFEST);
+console.log("visibilidad manifest checks:", visibilidadErrors.length === 0 ? "ok" : visibilidadErrors);
+
 const labLookupOk =
   manifestByModuleKey("lab") === LAB_MANIFEST &&
   manifestByModuleKey("compra") === COMPRA_MANIFEST &&
   manifestByModuleKey("deposito") === DEPOSITO_MANIFEST &&
-  MANIFESTS.length === 3;
-console.log("manifestByModuleKey lab/compra/deposito:", labLookupOk);
+  manifestByModuleKey("visibilidad") === VISIBILIDAD_MANIFEST &&
+  MANIFESTS.length === 4;
+console.log("manifestByModuleKey lab/compra/deposito/visibilidad:", labLookupOk);
 
 // Guard firmado 4, tripwire ejecutable: sin enum global de scope types — a
 // propósito. Si algún día aparece "ScopeType" en data/enums.json, el DoD
@@ -634,6 +716,7 @@ const pass =
   sharedManifestErrors.length === 0 &&
   labErrors.length === 0 &&
   depositoErrors.length === 0 &&
+  visibilidadErrors.length === 0 &&
   labLookupOk &&
   noScopeTypeEnum &&
   grantEventsOk &&

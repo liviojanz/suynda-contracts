@@ -37,6 +37,7 @@ import {
 // no compila — que es la única forma de verlo.
 import {
   DEPOSITO_MANIFEST,
+  VISIBILIDAD_MANIFEST,
   ITEM_TYPES,
   INVENTORY_OPERATION_TYPES,
   COST_EFFECT_KINDS,
@@ -242,6 +243,9 @@ if (!(INVENTORY_OPERATION_TYPES as readonly string[]).includes("RECEIPT") || (IN
 }
 if (DEPOSITO_MANIFEST.module_key !== "deposito") {
   problemas.push("DEPOSITO_MANIFEST no llega desde el entry");
+}
+if (VISIBILIDAD_MANIFEST.module_key !== "visibilidad") {
+  problemas.push("VISIBILIDAD_MANIFEST no llega desde el entry");
 }
 if (consecuencia.role !== unRol || provocacion.lines.length !== 1 || unTipo !== "PRODUCT" || unKind !== "RECEIPT_COST") {
   problemas.push("las formas de Depósito no traen los valores esperados");

@@ -69,6 +69,7 @@ export {
   COMPRA_MANIFEST,
   LAB_MANIFEST,
   DEPOSITO_MANIFEST,
+  VISIBILIDAD_MANIFEST,
   MANIFESTS,
   manifestByModuleKey,
   type ModuleManifest,

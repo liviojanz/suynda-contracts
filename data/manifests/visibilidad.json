@@ -1,0 +1,21 @@
+{
+  "module_key": "visibilidad",
+  "manifest_version": 1,
+  "functions": [
+    { "function_key": "ver", "nombre": "Ver", "descripcion": "Ver y navegar la información de Visibilidad", "autorizada_por_canal": false, "orden": 1, "delegable": true },
+    { "function_key": "gestionar_marca", "nombre": "Gestionar marca", "descripcion": "Crear y actualizar el Brand DNA y la guía de marca de la organización", "autorizada_por_canal": false, "orden": 2, "delegable": false },
+    { "function_key": "gestionar_campanas", "nombre": "Gestionar campañas", "descripcion": "Crear y administrar campañas y su contexto de negocio", "autorizada_por_canal": false, "orden": 3, "delegable": false },
+    { "function_key": "gestionar_conocimiento", "nombre": "Gestionar conocimiento", "descripcion": "Capturar, reintentar extracción y relacionar conocimiento reutilizable de la organización", "autorizada_por_canal": false, "orden": 4, "delegable": false },
+    { "function_key": "gestionar_contenido", "nombre": "Gestionar contenido", "descripcion": "Crear, generar, regenerar y revisar versiones de contenido basado en marca, campaña y conocimiento", "autorizada_por_canal": false, "orden": 5, "delegable": false },
+    { "function_key": "aprobar_contenido", "nombre": "Aprobar contenido", "descripcion": "Aprobar, editar y aprobar, o rechazar contenido en revisión", "autorizada_por_canal": false, "orden": 6, "delegable": false }
+  ],
+  "roles": [],
+  "role_grant_matrix": {},
+  "mandate_types": [],
+  "permission_presets": [
+    { "preset_key": "marca", "nombre": "Marca", "orden": 1, "functions": ["ver", "gestionar_marca"] },
+    { "preset_key": "creacion", "nombre": "Creación de contenido", "orden": 2, "functions": ["ver", "gestionar_campanas", "gestionar_conocimiento", "gestionar_contenido"] },
+    { "preset_key": "aprobacion", "nombre": "Aprobación", "orden": 3, "functions": ["ver", "aprobar_contenido"] },
+    { "preset_key": "gestion_completa", "nombre": "Gestión completa", "orden": 4, "functions": ["ver", "gestionar_marca", "gestionar_campanas", "gestionar_conocimiento", "gestionar_contenido", "aprobar_contenido"] }
+  ]
+}
