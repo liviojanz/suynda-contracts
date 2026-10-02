@@ -83,7 +83,7 @@
     "nombre_es": "Visibilidad",
     "descripcion_es": "Enriquecimiento y presencia",
     "activo": true,
-    "subdomain": null,
+    "subdomain": "visibilidad",
     "kind": "horizontal",
     "orden": 70
   },
